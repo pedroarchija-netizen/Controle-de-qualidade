@@ -1241,17 +1241,23 @@ function mostrarLogin(){
 
 async function carregarPerfil(user){
   console.log('[PERFIL] buscando...');
-  // Timeout de 5 segundos
-  const timeout = new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),5000));
-  try{
-    const query = _supa.from('profiles').select('*').eq('id',user.id).maybeSingle();
-    const {data,error} = await Promise.race([query, timeout]);
-    console.log('[PERFIL] ok:', data, error);
-    return data || {id:user.id,nome:user.email,email:user.email,perfil:'operador'};
-  }catch(e){
-    console.warn('[PERFIL] falhou ('+e.message+'), usando padrão');
-    return {id:user.id,nome:user.email,email:user.email,perfil:'operador'};
-  }
+  return new Promise(async(resolve)=>{
+    // timeout de segurança
+    const timer = setTimeout(()=>{
+      console.warn('[PERFIL] timeout — usando padrão');
+      resolve({id:user.id,nome:user.email,email:user.email,perfil:'operador'});
+    }, 15000);
+    try{
+      const {data,error} = await _supa.from('profiles').select('*').eq('id',user.id).maybeSingle();
+      clearTimeout(timer);
+      console.log('[PERFIL] resultado:', data, error);
+      resolve(data || {id:user.id,nome:user.email,email:user.email,perfil:'operador'});
+    }catch(e){
+      clearTimeout(timer);
+      console.warn('[PERFIL] erro:', e.message);
+      resolve({id:user.id,nome:user.email,email:user.email,perfil:'operador'});
+    }
+  });
 }
 
 _supa.auth.onAuthStateChange(async(event,session)=>{
