@@ -629,7 +629,6 @@ body{
         <label>Perfil</label>
         <select id="reg-perfil">
           <option value="operador">Operador</option>
-          <option value="supervisor">Supervisor</option>
           <option value="visualizador">Visualizador</option>
         </select>
       </div>
@@ -732,7 +731,7 @@ body{
 
   </nav>
 
-  <div class="sb-footer">IN·HAUS © 2025 — v1.0</div>
+  <div class="sb-footer">IN·HAUS © <span id="footer-year"></span> — v1.0</div>
 </aside>
 
 <!-- OVERLAY MOBILE -->
@@ -858,6 +857,7 @@ body{
       <div class="obs-body"><textarea id="obs" placeholder="Descreva os pontos de melhoria e ações necessárias..."></textarea></div>
     </div>
     <div class="actions">
+      <button class="btn btn-success" onclick="salvarAvaliacao5S()">💾 Salvar Avaliação</button>
       <button class="btn btn-primary" onclick="window.print()">🖨 Imprimir / PDF</button>
       <button class="btn btn-outline" onclick="resetarAvaliacao()">🗑 Limpar</button>
     </div>
@@ -1028,7 +1028,7 @@ body{
   <!-- PAGE: GP LISTA TICKETS -->
   <div class="page" id="page-gp-lista">
     <div class="tk-filters">
-      <input type="text" class="tk-search" id="tk-search" placeholder="🔍 Buscar por número, descrição, responsável..." oninput="renderTickets()"/>
+      <input type="text" class="tk-search" id="tk-search" placeholder="🔍 Buscar por número, descrição, responsável..." oninput="debounceRenderTickets()"/>
       <button class="filter-btn active" onclick="gpFiltro('todos',this)">Todos</button>
       <button class="filter-btn" onclick="gpFiltro('aberto',this)">Abertos</button>
       <button class="filter-btn" onclick="gpFiltro('analise',this)">Em Análise</button>
@@ -1153,6 +1153,10 @@ const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 
 const _supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// Wake-up: acorda o projeto Supabase hibernado imediatamente (plano gratuito)
+// Dispara em background sem bloquear a UI
+(async()=>{try{await _supa.from('profiles').select('id').limit(1);}catch(e){}})();
+
 // Estado global
 let currentUser    = null;
 let currentProfile = null;
@@ -1240,36 +1244,49 @@ function mostrarLogin(){
 }
 
 async function carregarPerfil(user){
-  console.log('[PERFIL] buscando...');
   return new Promise(async(resolve)=>{
-    // timeout de segurança
     const timer = setTimeout(()=>{
-      console.warn('[PERFIL] timeout — usando padrão');
-      resolve({id:user.id,nome:user.email,email:user.email,perfil:'operador'});
-    }, 15000);
+      resolve({id:user.id,nome:user.email,email:user.email,perfil:'operador',_timeout:true});
+    }, 20000);
     try{
       const {data,error} = await _supa.from('profiles').select('*').eq('id',user.id).maybeSingle();
       clearTimeout(timer);
-      console.log('[PERFIL] resultado:', data, error);
       resolve(data || {id:user.id,nome:user.email,email:user.email,perfil:'operador'});
     }catch(e){
       clearTimeout(timer);
-      console.warn('[PERFIL] erro:', e.message);
       resolve({id:user.id,nome:user.email,email:user.email,perfil:'operador'});
     }
   });
 }
 
 _supa.auth.onAuthStateChange(async(event,session)=>{
-  console.log('[AUTH] evento:', event, '| session:', !!session);
   if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION') && session){
-    if(_appIniciado){console.log('[AUTH] já iniciado');return;}
+    if(_appIniciado) return;
     _appIniciado=true;
     showLoading('Carregando...');
     const profile = await carregarPerfil(session.user);
-    console.log('[AUTH] perfil obtido:', profile?.perfil);
-    hideLoading();
-    iniciarApp(session.user,profile);
+    // Se o perfil veio por timeout, tentar recarregar silenciosamente em background
+    if(profile._timeout){
+      delete profile._timeout;
+      iniciarApp(session.user,profile);
+      hideLoading();
+      // Retry em background — Supabase pode ter acordado a tempo
+      setTimeout(async()=>{
+        try{
+          const {data}=await _supa.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+          if(data && data.perfil !== currentProfile?.perfil){
+            currentProfile=data;
+            document.getElementById('user-role-display').textContent=data.perfil||'—';
+            document.getElementById('user-name-display').textContent=data.nome||session.user.email;
+            document.getElementById('user-menu-name').textContent=data.nome||session.user.email;
+            document.getElementById('user-avatar').textContent=(data.nome||session.user.email)[0].toUpperCase();
+          }
+        }catch(e){}
+      }, 5000);
+    } else {
+      hideLoading();
+      iniciarApp(session.user,profile);
+    }
   } else if(event==='SIGNED_OUT'||(event==='INITIAL_SESSION'&&!session)){
     mostrarLogin();
   }
@@ -1277,14 +1294,11 @@ _supa.auth.onAuthStateChange(async(event,session)=>{
 
 // ── SINCRONIZAÇÃO ──
 async function carregarDados(){
-  console.log('[DADOS] iniciando carregamento...');
   showLoading('Sincronizando...');
   try{
     await Promise.all([carregarTickets(),carregarAtividades()]);
-    console.log('[DADOS] carregado com sucesso');
     hideLoading();toast('Dados carregados','success');
   }catch(e){
-    console.error('[DADOS] erro:', e);
     hideLoading();toast('Erro ao carregar dados: '+e.message,'error');
   }
 }
@@ -1388,6 +1402,8 @@ function goTo(pageId, mod, pageName){
   document.getElementById('tb-mod').textContent = mod;
   document.getElementById('tb-page').textContent = pageName;
   if(pageId==='5s-dashboard') renderDashboard();
+  if(pageId==='gp-dashboard') renderGPDashboard();
+  if(pageId==='gp-lista') renderTickets();
   closeSidebar();
 }
 
@@ -1423,6 +1439,7 @@ let fotosCount=0;
 function btnClass(n){return n>=4?'active-good':n>=2?'active-mid':'active-bad';}
 
 function build(){
+  document.getElementById('footer-year').textContent=new Date().getFullYear();
   const area=document.getElementById('sensos-area');
   sensos.forEach(s=>{
     const card=document.createElement('div');card.className='senso-card';
@@ -1480,6 +1497,29 @@ document.getElementById('foto-input').addEventListener('change',function(){
   });this.value='';
 });
 
+async function salvarAvaliacao5S(){
+  const setor = document.getElementById('setor').value;
+  const data  = document.getElementById('data').value;
+  const avaliador = document.getElementById('avaliador').value.trim();
+  if(!setor||!avaliador){alert('Preencha setor e avaliador antes de salvar.');return;}
+  const temNotas = Object.values(notas).some(v=>v>=0);
+  if(!temNotas){alert('Preencha ao menos um critério antes de salvar.');return;}
+  const soma = Object.values(notas).filter(v=>v>=0).reduce((a,b)=>a+b,0);
+  const pct  = Math.round(soma/totalMax*100);
+  const obs  = document.getElementById('obs').value.trim();
+  const payload = {
+    setor, data_avaliacao:data, avaliador,
+    notas:JSON.stringify(notas),
+    pontuacao:soma, percentual:pct, observacoes:obs||null,
+    user_id:currentUser.id
+  };
+  showLoading('Salvando avaliação...');
+  const {error} = await _supa.from('avaliacoes_5s').insert(payload);
+  hideLoading();
+  if(error){toast('Erro ao salvar: '+error.message,'error');return;}
+  toast('Avaliação salva com sucesso!','success');
+}
+
 function resetarAvaliacao(){
   if(!confirm('Limpar formulário?'))return;
   Object.keys(notas).forEach(k=>notas[k]=-1);
@@ -1522,12 +1562,26 @@ async function adicionarAtividade(){
   toast('Atividade adicionada!','success');
   renderAtividades();
 }
-async function toggleStatus(id){const a=atividades.find(x=>x.id===id);if(!a)return;const c=['pendente','andamento','concluido'];a.status=c[(c.indexOf(a.status)+1)%c.length];await atualizarStatusAtividade(id,a.status);renderAtividades();}
+async function toggleStatus(id){
+  const a=atividades.find(x=>x.id===id);
+  if(!a) return;
+  const c=['pendente','andamento','concluido'];
+  const novoStatus=c[(c.indexOf(a.status)+1)%c.length];
+  a.status=novoStatus;
+  renderAtividades(); // atualiza UI imediatamente (optimistic update)
+  const {error}=await _supa.from('atividades_5s').update({status:novoStatus,atualizado_em:new Date().toISOString()}).eq('id',id);
+  if(error){
+    // reverter se falhou
+    a.status=c[(c.indexOf(novoStatus)-1+c.length)%c.length];
+    renderAtividades();
+    toast('Erro ao atualizar status: '+error.message,'error');
+  }
+}
 async function removerAtividade(id){if(!confirm('Remover atividade?'))return;showLoading('Removendo...');const ok=await excluirAtividade(id);hideLoading();if(!ok)return;atividades=atividades.filter(x=>x.id!==id);toast('Atividade removida.','info');renderAtividades();}
 function filtrar(f,btn){filtroAtual=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderAtividades();}
-function isVencido(prazo,status){if(status==='concluido')return false;return new Date(prazo)<new Date(new Date().toDateString());}
-function fmtData(d){const[y,m,dia]=d.split('-');return`${dia}/${m}/${y}`;}
-
+function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function isVencido(prazo,status){if(status==='concluido'||!prazo)return false;return prazo<todayStr();}
+function tkIsVencido(t){if(['resolvido','fechado'].includes(t.status)||!t.prazo)return false;return t.prazo<todayStr();}
 function renderAtividades(){
   const grid=document.getElementById('atividades-grid');
   let lista=atividades;
@@ -1594,7 +1648,7 @@ function renderDashboard(){
 // GESTÃO DE PROBLEMAS
 // ══════════════════════════════════════════════
 let tickets = [];
-let tkCounter = 0;
+let tkCounter = 0; // usado apenas para referência local temporária
 let tkFiltroAtual = 'todos';
 let tkModalId = null;
 
@@ -1604,24 +1658,35 @@ const statusClass = {aberto:'st-aberto', analise:'st-analise', execucao:'st-exec
 const statusEmoji = {aberto:'🔵', analise:'🟣', execucao:'🟡', resolvido:'🟢', fechado:'⚫'};
 const catEmoji = {Processo:'⚙️', Produto:'📦', Equipamento:'🔧', Pessoa:'👤', Segurança:'🛡️'};
 
+// ── UTILITÁRIOS ──
+function esc(str){
+  if(str==null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 function nowStr(){
   const d = new Date();
   return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 function fmtDt(iso){if(!iso)return'—';const[y,m,dia]=iso.split('-');return`${dia}/${m}/${y}`;}
-function tkIsVencido(t){if(['resolvido','fechado'].includes(t.status))return false;return t.prazo&&new Date(t.prazo)<new Date(new Date().toDateString());}
 
-function gerarNumero(){
-  tkCounter++;
-  return 'TK-' + String(tkCounter).padStart(4,'0');
-}
 
 // buffers de imagens
 let tfImgsBuffer = []; // imagens de abertura
 let updImgsBuffer = []; // imagens de atualização
 
+const MAX_IMG_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ['image/jpeg','image/png','image/webp','image/gif'];
+
+function validarImagem(file){
+  if(!ALLOWED_TYPES.includes(file.type)){toast('Tipo não permitido: '+file.type+'. Use JPG, PNG, WEBP ou GIF.','error');return false;}
+  if(file.size>MAX_IMG_SIZE){toast('Arquivo "'+file.name+'" excede 5MB.','error');return false;}
+  return true;
+}
+
 function previewImgAbertura(input){
   Array.from(input.files).forEach(file=>{
+    if(!validarImagem(file)) return;
     const r=new FileReader();
     r.onload=e=>{
       tfImgsBuffer.push({name:file.name,src:e.target.result});
@@ -1637,6 +1702,7 @@ function renderPreviewAbertura(){
 }
 function previewImgResolucao(input){
   Array.from(input.files).forEach(file=>{
+    if(!validarImagem(file)) return;
     const r=new FileReader();
     r.onload=e=>{
       updImgsBuffer.push({name:file.name,src:e.target.result});
@@ -1663,15 +1729,11 @@ async function abrirTicket(){
   const prazo   = document.getElementById('tf-prazo').value;
   if(!abertor||!cat||!prio||!desc||!resp){alert('Preencha todos os campos obrigatórios.');return;}
   const t = {
-    id: Date.now(),
-    numero: gerarNumero(),
     abertor, setor, categoria:cat,
     prioridade:prio, descricao:desc,
     responsavel:resp, prazo,
     status:'aberto',
     imagens: [...tfImgsBuffer],
-    aberturaStr: nowStr(),
-    historico:[{dt:nowStr(), usuario:abertor, acao:'Ticket aberto', nota:desc, status:'aberto', imagens:[...tfImgsBuffer]}]
   };
   showLoading('Salvando ticket...');
   const saved = await salvarTicket(t);
@@ -1712,6 +1774,9 @@ function gpFiltroRapido(f){
   },50);
 }
 
+let _tkSearchTimer=null;
+function debounceRenderTickets(){clearTimeout(_tkSearchTimer);_tkSearchTimer=setTimeout(renderTickets,250);}
+
 function renderTickets(){
   const list = document.getElementById('tickets-list');
   const q = (document.getElementById('tk-search')||{}).value||'';
@@ -1736,24 +1801,24 @@ function renderTickets(){
     const prazoStr = t.prazo ? (venc?`<span class="vencido">⏰ ${fmtDt(t.prazo)} (Vencido)</span>`:`📅 ${fmtDt(t.prazo)}`) : '—';
     return `<div class="tk-card">
       <div class="tk-inner">
-        <div class="tk-stripe ${t.prioridade}"></div>
+        <div class="tk-stripe ${esc(t.prioridade)}"></div>
         <div class="tk-body">
           <div class="tk-top">
             <div class="tk-top-left">
-              <span class="tk-num">${t.numero}</span>
-              <span class="tk-title">${t.descricao.substring(0,80)}${t.descricao.length>80?'...':''}</span>
+              <span class="tk-num">${esc(t.numero)}</span>
+              <span class="tk-title">${esc(t.descricao.substring(0,80))}${t.descricao.length>80?'...':''}</span>
             </div>
             <div class="tk-badges">
-              <span class="badge ${t.prioridade}">${prioLabel[t.prioridade]}</span>
-              <span class="st-badge ${statusClass[t.status]}">${statusLabel[t.status]}</span>
+              <span class="badge ${esc(t.prioridade)}">${prioLabel[t.prioridade]||esc(t.prioridade)}</span>
+              <span class="st-badge ${statusClass[t.status]||''}">${statusLabel[t.status]||esc(t.status)}</span>
             </div>
           </div>
           <div class="tk-meta">
-            <div class="tk-meta-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${t.responsavel}</div>
+            <div class="tk-meta-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${esc(t.responsavel)}</div>
             <div class="tk-meta-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${prazoStr}</div>
-            ${t.setor?`<div class="tk-meta-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>${t.setor}</div>`:''}
-            <div class="tk-meta-item">${catEmoji[t.categoria]||''} ${t.categoria}</div>
-            <div class="tk-meta-item" style="color:var(--muted2);font-size:.68rem;">${t.aberturaStr} · por ${t.abertor}</div>
+            ${t.setor?`<div class="tk-meta-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>${esc(t.setor)}</div>`:''}
+            <div class="tk-meta-item">${catEmoji[t.categoria]||''} ${esc(t.categoria)}</div>
+            <div class="tk-meta-item" style="color:var(--muted2);font-size:.68rem;">${esc(t.aberturaStr)} · por ${esc(t.abertor)}</div>
           </div>
         </div>
       </div>
@@ -1800,10 +1865,10 @@ function renderHistorico(t){
     <div class="hist-item">
       <div class="hist-dot">${statusEmoji[h.status]||'📌'}</div>
       <div class="hist-content">
-        <div class="hist-action">${h.acao} <span class="st-badge ${statusClass[h.status]||'st-aberto'}" style="font-size:.6rem;padding:2px 7px;">${statusLabel[h.status]||h.status}</span></div>
-        <div class="hist-meta">🕐 ${h.dt} · por ${h.usuario}</div>
-        ${h.nota&&h.nota!==t.descricao?`<div class="hist-note">${h.nota}</div>`:''}
-        ${h.imagens&&h.imagens.length>0?`<div class="hist-imgs">${h.imagens.map(img=>`<div class="hist-img" onclick="abrirLightbox('${img.src}')"><img src="${img.src}" alt="${img.name}"/></div>`).join('')}</div>`:''}
+        <div class="hist-action">${esc(h.acao)} <span class="st-badge ${statusClass[h.status]||'st-aberto'}" style="font-size:.6rem;padding:2px 7px;">${statusLabel[h.status]||esc(h.status)}</span></div>
+        <div class="hist-meta">🕐 ${esc(h.dt)} · por ${esc(h.usuario)}</div>
+        ${h.nota&&h.nota!==t.descricao?`<div class="hist-note">${esc(h.nota)}</div>`:''}
+        ${h.imagens&&h.imagens.length>0?`<div class="hist-imgs">${h.imagens.map(img=>`<div class="hist-img" onclick="abrirLightbox('${esc(img.src)}')"><img src="${esc(img.src)}" alt="${esc(img.name)}"/></div>`).join('')}</div>`:''}
       </div>
     </div>`).join('');
 }
@@ -1825,6 +1890,7 @@ async function atualizarTicket(){
   updImgsBuffer=[];
   toast('Atualização registrada!','success');
   atualizarGPBadge();
+  await carregarTickets(); // recarrega do banco para garantir consistência
   abrirModal(tkModalId);
   renderTickets();
 }
@@ -1835,13 +1901,24 @@ function fecharModal(){
 }
 
 document.getElementById('modal-ticket').addEventListener('click',function(e){if(e.target===this)fecharModal();});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    if(!document.getElementById('lightbox').classList.contains('hidden')){fecharLightbox();return;}
+    if(!document.getElementById('modal-ticket').classList.contains('hidden')){fecharModal();return;}
+  }
+});
+
+function podeEditar(){return ['admin','supervisor'].includes(currentProfile?.perfil);}
+function podeExcluir(){return currentProfile?.perfil==='admin';}
 
 async function excluirTicket(id){
+  if(!podeExcluir()){toast('Sem permissão para excluir tickets.','error');return;}
   if(!confirm('Excluir este ticket?'))return;
   showLoading('Excluindo...');
   const ok = await excluirTicketDB(id);
   hideLoading();
   if(!ok)return;
+  if(tkModalId===id) fecharModal();
   tickets = tickets.filter(x=>x.id!==id);
   toast('Ticket excluído.','info');
   atualizarGPBadge();
@@ -1888,25 +1965,9 @@ function renderGPDashboard(){
 
   const alertas = document.getElementById('gpd-alertas');
   const al = [];
-  tickets.filter(t=>tkIsVencido(t)).forEach(t=>al.push({cor:'var(--danger)',text:`<strong>${t.numero}</strong> — ${t.descricao.substring(0,60)} <span class="st-badge ${statusClass[t.status]}" style="font-size:.62rem;">${statusLabel[t.status]}</span>`,meta:`Responsável: ${t.responsavel} · Prazo: ${fmtDt(t.prazo)} · ${prioLabel[t.prioridade]}`}));
-  tickets.filter(t=>t.prioridade==='critico'&&!['resolvido','fechado'].includes(t.status)&&!tkIsVencido(t)).forEach(t=>al.push({cor:'var(--warn)',text:`<strong>${t.numero}</strong> — ${t.descricao.substring(0,60)} <span class="st-badge ${statusClass[t.status]}" style="font-size:.62rem;">${statusLabel[t.status]}</span>`,meta:`Responsável: ${t.responsavel} · Prazo: ${fmtDt(t.prazo)}`}));
+  tickets.filter(t=>tkIsVencido(t)).forEach(t=>al.push({cor:'var(--danger)',text:`<strong>${esc(t.numero)}</strong> — ${esc(t.descricao.substring(0,60))} <span class="st-badge ${statusClass[t.status]}" style="font-size:.62rem;">${statusLabel[t.status]||esc(t.status)}</span>`,meta:`Responsável: ${esc(t.responsavel)} · Prazo: ${fmtDt(t.prazo)} · ${prioLabel[t.prioridade]||''}`}));
+  tickets.filter(t=>t.prioridade==='critico'&&!['resolvido','fechado'].includes(t.status)&&!tkIsVencido(t)).forEach(t=>al.push({cor:'var(--warn)',text:`<strong>${esc(t.numero)}</strong> — ${esc(t.descricao.substring(0,60))} <span class="st-badge ${statusClass[t.status]}" style="font-size:.62rem;">${statusLabel[t.status]||esc(t.status)}</span>`,meta:`Responsável: ${esc(t.responsavel)} · Prazo: ${fmtDt(t.prazo)}`}));
   alertas.innerHTML = al.length===0?'<div class="empty-dash">✅ Nenhum ticket crítico ou vencido.</div>':al.map(a=>`<div class="alert-item"><div class="alert-dot" style="background:${a.cor};box-shadow:0 0 6px ${a.cor};"></div><div><div class="alert-text">${a.text}</div><div class="alert-meta">${a.meta}</div></div></div>`).join('');
-}
-
-// Sobrescrever goTo para incluir renderização do GP Dashboard
-const _goToOrig = goTo;
-function goTo(pageId, mod, pageName){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+pageId).classList.add('active');
-  const item = document.getElementById('item-'+pageId);
-  if(item) item.classList.add('active');
-  document.getElementById('tb-mod').textContent = mod;
-  document.getElementById('tb-page').textContent = pageName;
-  if(pageId==='5s-dashboard') renderDashboard();
-  if(pageId==='gp-dashboard') renderGPDashboard();
-  if(pageId==='gp-lista') renderTickets();
-  closeSidebar();
 }
 
 build();
