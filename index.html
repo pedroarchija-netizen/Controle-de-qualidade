@@ -2277,8 +2277,8 @@ function renderTickets(){
       <div class="tk-footer">
         <div style="font-size:.7rem;color:var(--muted2);">Histórico: ${t.historico.length} registro${t.historico.length!==1?'s':''}</div>
         <div class="tk-actions">
-          <button class="tk-btn" onclick="abrirModal(${t.id})">🔍 Ver Detalhes</button>
-          <button class="tk-btn danger" onclick="excluirTicket(${t.id})">✕ Excluir</button>
+          <button class="tk-btn" onclick="abrirModal('${t.id}')">🔍 Ver Detalhes</button>
+          <button class="tk-btn danger" onclick="excluirTicket('${t.id}')">✕ Excluir</button>
         </div>
       </div>
     </div>`;
@@ -2337,8 +2337,7 @@ async function atualizarTicket(){
   const imgsSalvas = await salvarHistorico(t.id, {acao, nota:nota||'—', status:statusFinal, novoStatus}, updImgsBuffer);
   hideLoading();
   if(imgsSalvas===false){return;}
-  t.historico.push({dt:nowStr(), usuario:currentProfile?.nome||currentUser?.email||'Usuário', acao, nota:nota||'—', status:statusFinal, imagens:Array.isArray(imgsSalvas)?imgsSalvas:[...updImgsBuffer]});
-  if(novoStatus) t.status = novoStatus;
+  // Histórico e status já foram atualizados pelo optimistic update em salvarHistorico
   updImgsBuffer=[];
   toast('Atualização registrada!','success');
   atualizarGPBadge();
