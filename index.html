@@ -1149,7 +1149,7 @@ body{
 // ⚠️  SUBSTITUA OS VALORES ABAIXO PELOS DO SEU PROJETO
 // Project Settings > API no painel do Supabase
 const SUPABASE_URL  = 'https://mmallfxwgemjsshrzotl.supabase.co';
-const SUPABASE_KEY  = 'sb_publishable_pcHiT8cvoD2WqlVsAUC2-A_Ha2ihsHg';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYWxsZnh3Z2VtanNzaHJ6b3RsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMTg3MzMsImV4cCI6MjA5MzY5NDczM30.FPbQ3fBOhD5Tr1QHL6uW1v-Nj84b9q50Kq8TECRp8gc';
 
 const _supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -1212,12 +1212,7 @@ document.addEventListener('click',e=>{
   if(m&&c&&!m.contains(e.target)&&!c.contains(e.target))closeUserMenu();
 });
 
-async function carregarPerfil(user){
-  console.log('[PERFIL] buscando perfil para:', user.id);
-  const {data,error}=await _supa.from('profiles').select('*').eq('id',user.id).single();
-  console.log('[PERFIL] resultado:', data, 'erro:', error);
-  return data;
-}
+
 
 function iniciarApp(user,profile){
   currentUser=user;currentProfile=profile;
@@ -1235,25 +1230,42 @@ function iniciarApp(user,profile){
 // Controle para não inicializar duas vezes
 let _appIniciado = false;
 
+function mostrarLogin(){
+  _appIniciado=false;
+  currentUser=null;currentProfile=null;
+  hideLoading();
+  document.getElementById('app-shell').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
+  tickets=[];atividades=[];
+}
+
+async function carregarPerfil(user){
+  console.log('[PERFIL] buscando...');
+  // Timeout de 5 segundos
+  const timeout = new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),5000));
+  try{
+    const query = _supa.from('profiles').select('*').eq('id',user.id).maybeSingle();
+    const {data,error} = await Promise.race([query, timeout]);
+    console.log('[PERFIL] ok:', data, error);
+    return data || {id:user.id,nome:user.email,email:user.email,perfil:'operador'};
+  }catch(e){
+    console.warn('[PERFIL] falhou ('+e.message+'), usando padrão');
+    return {id:user.id,nome:user.email,email:user.email,perfil:'operador'};
+  }
+}
+
 _supa.auth.onAuthStateChange(async(event,session)=>{
   console.log('[AUTH] evento:', event, '| session:', !!session);
   if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION') && session){
-    if(_appIniciado){console.log('[AUTH] já iniciado, ignorando');return;}
-    _appIniciado = true;
-    console.log('[AUTH] iniciando app para:', session.user.email);
-    showLoading('Carregando dados...');
-    const profile=await carregarPerfil(session.user);
-    console.log('[AUTH] perfil:', profile);
+    if(_appIniciado){console.log('[AUTH] já iniciado');return;}
+    _appIniciado=true;
+    showLoading('Carregando...');
+    const profile = await carregarPerfil(session.user);
+    console.log('[AUTH] perfil obtido:', profile?.perfil);
     hideLoading();
     iniciarApp(session.user,profile);
   } else if(event==='SIGNED_OUT'||(event==='INITIAL_SESSION'&&!session)){
-    _appIniciado = false;
-    currentUser=null;currentProfile=null;
-    hideLoading();
-    console.log('[AUTH] sem sessão, mostrando login');
-    document.getElementById('app-shell').style.display='none';
-    document.getElementById('auth-screen').style.display='flex';
-    tickets=[];atividades=[];
+    mostrarLogin();
   }
 });
 
