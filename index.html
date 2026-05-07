@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#080F1F"/>
 <title>IN·HAUS — Qualidade</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 <style>
 :root{
   --bg:#020810;--surface:#070E1C;--surface2:#0A1422;--surface3:#0E1A2C;--surface4:#121F33;
@@ -1230,26 +1230,26 @@ function iniciarApp(user,profile){
 }
 
 // Listener de sessão
+// Controle para não inicializar duas vezes
+let _appIniciado = false;
+
 _supa.auth.onAuthStateChange(async(event,session)=>{
-  if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'){
+  if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION') && session){
+    if(_appIniciado) return;
+    _appIniciado = true;
     showLoading('Carregando dados...');
     const profile=await carregarPerfil(session.user);
-    hideLoading();iniciarApp(session.user,profile);
-  } else if(event==='SIGNED_OUT'){
+    hideLoading();
+    iniciarApp(session.user,profile);
+  } else if(event==='SIGNED_OUT'||(event==='INITIAL_SESSION'&&!session)){
+    _appIniciado = false;
     currentUser=null;currentProfile=null;
+    hideLoading();
     document.getElementById('app-shell').style.display='none';
     document.getElementById('auth-screen').style.display='flex';
     tickets=[];atividades=[];
-    renderTickets();renderAtividades();
   }
 });
-
-// Verificar sessão ao abrir
-(async()=>{
-  showLoading('Verificando sessão...');
-  const {data:{session}}=await _supa.auth.getSession();
-  if(!session){hideLoading();document.getElementById('auth-screen').style.display='flex';}
-})();
 
 // ── SINCRONIZAÇÃO ──
 async function carregarDados(){
