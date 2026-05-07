@@ -578,6 +578,57 @@ body{
 .toast.info{background:var(--al2);border:1px solid var(--border2);color:var(--accent);}
 @keyframes toastIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
+/* ── NÃO CONFORMIDADE ── */
+.rnc-form-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:22px;margin-bottom:20px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.rnc-form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--warn),transparent);opacity:.5;}
+.rnc-form-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+.rnc-form-header h3{font-size:.95rem;font-weight:700;color:var(--text);margin:0 0 4px;}
+.rnc-form-sub{font-size:.72rem;color:var(--muted);font-style:italic;}
+.rnc-section{border:1px solid var(--border);border-radius:var(--rs);padding:18px;margin-bottom:16px;background:var(--surface2);}
+.rnc-section-title{font-size:.65rem;font-weight:700;color:var(--warn);text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.rnc-section-title::after{content:'';flex:1;height:1px;background:rgba(255,184,0,.2);}
+.rnc-group{display:flex;flex-direction:column;gap:5px;}
+.rnc-group label{font-size:.62rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+.rnc-group input,.rnc-group select,.rnc-group textarea{width:100%;background:var(--surface3);border:1px solid var(--border2);border-radius:var(--rs);padding:9px 12px;font-size:.84rem;font-family:'Space Grotesk',sans-serif;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+.rnc-group input:focus,.rnc-group select:focus,.rnc-group textarea:focus{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,184,0,.1);}
+.rnc-group select option{background:var(--surface3);}
+.rnc-group textarea{resize:vertical;min-height:80px;}
+.rnc-grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.rnc-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.rnc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.rnc-acoes-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.porques-wrap{display:flex;flex-direction:column;gap:7px;}
+.porque-row{display:flex;align-items:center;gap:8px;}
+.porque-num{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:700;color:var(--warn);background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.25);border-radius:var(--rs);padding:4px 8px;white-space:nowrap;min-width:28px;text-align:center;}
+.porque-row input{flex:1;background:var(--surface3);border:1px solid var(--border2);border-radius:var(--rs);padding:8px 10px;font-size:.83rem;font-family:'Space Grotesk',sans-serif;color:var(--text);outline:none;transition:border-color .2s;}
+.porque-row input:focus{border-color:var(--warn);}
+.rnc-acao-row{display:grid;grid-template-columns:1fr 140px 130px 28px;gap:6px;align-items:center;margin-bottom:6px;}
+.rnc-acao-row-corr{grid-template-columns:1fr 130px 28px;}
+.rnc-acao-row input{background:var(--surface3);border:1px solid var(--border2);border-radius:var(--rs);padding:8px 10px;font-size:.82rem;font-family:'Space Grotesk',sans-serif;color:var(--text);outline:none;transition:border-color .2s;width:100%;}
+.rnc-acao-row input:focus{border-color:var(--warn);}
+.rnc-row-del{background:none;border:none;color:var(--muted2);font-size:16px;cursor:pointer;padding:4px 6px;border-radius:var(--rs);transition:color .2s,background .2s;}
+.rnc-row-del:hover{color:var(--danger);background:var(--dl);}
+.rnc-add-row{background:none;border:1px dashed var(--border2);border-radius:var(--rs);color:var(--muted);font-size:.75rem;font-family:'Space Grotesk',sans-serif;padding:6px 14px;cursor:pointer;transition:all .2s;margin-top:4px;}
+.rnc-add-row:hover{border-color:var(--warn);color:var(--warn);background:var(--wl);}
+/* RNC card na lista */
+.rnc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden;transition:border-color .2s,box-shadow .2s;}
+.rnc-card:hover{border-color:var(--border2);box-shadow:var(--shadow-lg);}
+.rnc-card-stripe{width:4px;flex-shrink:0;}
+.rnc-card-stripe.Maior{background:var(--danger);}
+.rnc-card-stripe.Menor{background:var(--warn);}
+.rnc-card-inner{display:flex;width:100%;}
+.rnc-card-body{flex:1;padding:14px 16px;}
+.rnc-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px;}
+.rnc-card-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--surface2);border-top:1px solid var(--border);gap:8px;flex-wrap:wrap;}
+/* Status NC */
+.st-nc-aberto{background:rgba(0,212,255,.12);color:var(--accent);border:1px solid rgba(0,212,255,.3);}
+.st-nc-analise{background:rgba(189,147,249,.12);color:var(--purple);border:1px solid rgba(189,147,249,.3);}
+.st-nc-execucao{background:rgba(255,184,0,.12);color:var(--warn);border:1px solid rgba(255,184,0,.3);}
+.st-nc-encerrada{background:rgba(0,255,163,.12);color:var(--success);border:1px solid rgba(0,255,163,.3);}
+/* Grau badge */
+.badge-grau-maior{background:var(--dl);color:var(--danger);border:1px solid rgba(255,77,106,.3);display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.badge-grau-menor{background:var(--wl);color:var(--warn);border:1px solid rgba(255,184,0,.3);display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+@media(max-width:768px){.rnc-grid-5{grid-template-columns:1fr 1fr;}.rnc-grid-3{grid-template-columns:1fr;}.rnc-grid-2{grid-template-columns:1fr;}.rnc-acoes-grid{grid-template-columns:1fr;}.rnc-acao-row{grid-template-columns:1fr 28px;}.rnc-acao-row .rnc-resp-input,.rnc-acao-row .rnc-prazo-input{display:none;}}
 @media print{
   .sb,.topbar,.actions,.nota-btns,.upload-zone,.foto-del,.escala-toolbar,.filter-group,.ativ-del,.badge-status-ativ{display:none!important;}
   body{background:#fff!important;color:#111!important;}
@@ -694,6 +745,22 @@ body{
     </div>
 
     <!-- MÓDULOS FUTUROS -->
+    <div class="sb-module" style="margin-top:8px;">
+      <button class="sb-module-btn" id="mod-nc" onclick="toggleMod('nc')">
+        <span class="mod-icon">⚠️</span>
+        <span class="mod-label">Não Conformidade</span>
+        <span class="nb-live" id="nc-badge" style="display:none;font-size:.6rem;font-weight:700;font-family:'DM Mono',monospace;background:rgba(255,184,0,.18);border:1px solid rgba(255,184,0,.4);color:var(--warn);padding:1px 7px;border-radius:99px;"></span>
+        <span class="sb-chevron">▶</span>
+      </button>
+      <div class="sb-children" id="children-nc">
+        <button class="sb-item" onclick="goTo('nc-novo','Não Conformidade','Registrar RNC')" id="item-nc-novo">
+          <span class="ic">➕</span> Registrar RNC
+        </button>
+        <button class="sb-item" onclick="goTo('nc-lista','Não Conformidade','Registros')" id="item-nc-lista">
+          <span class="ic">📋</span> Registros
+        </button>
+      </div>
+    </div>
     <div class="sb-module" style="margin-top:8px;">
       <button class="sb-module-btn" id="mod-audit" onclick="toggleMod('audit')">
         <span class="mod-icon">🔍</span>
@@ -969,11 +1036,21 @@ body{
       <div class="tf-grid">
         <div class="tf-group">
           <label>Aberto por</label>
-          <input type="text" id="tf-abertor" placeholder="Seu nome"/>
+          <input type="text" id="tf-abertor" readonly style="opacity:.7;cursor:default;background:var(--surface2);"/>
         </div>
         <div class="tf-group">
-          <label>Setor / Subsetor</label>
-          <input type="text" id="tf-setor" placeholder="ex: Inbound / Recebimento"/>
+          <label>Setor</label>
+          <select id="tf-setor">
+            <option value="">Selecione o setor...</option>
+            <option value="Inbound">Inbound</option>
+            <option value="Outbound">Outbound</option>
+            <option value="Red Carpet">Red Carpet</option>
+            <option value="Administrativo">Administrativo</option>
+          </select>
+        </div>
+        <div class="tf-group">
+          <label>Subsetor <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label>
+          <input type="text" id="tf-subsetor" placeholder="ex: Recebimento, Expedição..."/>
         </div>
         <div class="tf-group">
           <label>Categoria do Problema</label>
@@ -1002,7 +1079,9 @@ body{
         </div>
         <div class="tf-group">
           <label>Responsável pela Resolução</label>
-          <input type="text" id="tf-responsavel" placeholder="Nome do responsável"/>
+          <select id="tf-responsavel">
+            <option value="">Selecione o responsável...</option>
+          </select>
         </div>
         <div class="tf-group">
           <label>Prazo para Resolução</label>
@@ -1118,14 +1197,221 @@ body{
   <div class="page" id="page-audit-resultados">
     <div class="coming-soon"><div class="cs-icon">📊</div><h2>Resultados de Auditoria</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
   </div>
-  <div class="page" id="page-nc-registrar">
-    <div class="coming-soon"><div class="cs-icon">⚠</div><h2>Registrar Não Conformidade</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
+  <!-- PAGE: NC NOVO -->
+  <div class="page" id="page-nc-novo">
+    <div class="rnc-form-card">
+      <div class="rnc-form-header">
+        <div>
+          <h3>⚠️ Registro de Não Conformidade</h3>
+          <div class="rnc-form-sub">RNC – Formulário de Identificação, Análise e Ação Corretiva</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline" onclick="limparFormRNC()">↺ Limpar</button>
+          <button class="btn btn-success" onclick="gerarDocxRNC()">📄 Gerar Documento</button>
+          <button class="btn btn-primary" onclick="salvarRNC()">💾 Salvar RNC</button>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 1: IDENTIFICAÇÃO -->
+      <div class="rnc-section">
+        <div class="rnc-section-title">1. Identificação</div>
+        <div class="rnc-grid-5">
+          <div class="rnc-group">
+            <label>Nº RNC</label>
+            <input type="text" id="rnc-numero" placeholder="Gerado automaticamente" readonly style="opacity:.7;cursor:default;background:var(--surface2);"/>
+          </div>
+          <div class="rnc-group">
+            <label>Data de Abertura</label>
+            <input type="date" id="rnc-data"/>
+          </div>
+          <div class="rnc-group">
+            <label>Responsável pela Abertura</label>
+            <input type="text" id="rnc-responsavel-abertura" readonly style="opacity:.7;cursor:default;background:var(--surface2);"/>
+          </div>
+          <div class="rnc-group">
+            <label>Setor / Área</label>
+            <select id="rnc-setor">
+              <option value="">Selecione...</option>
+              <option value="Inbound">Inbound</option>
+              <option value="Outbound">Outbound</option>
+              <option value="Red Carpet">Red Carpet</option>
+              <option value="Administrativo">Administrativo</option>
+            </select>
+          </div>
+          <div class="rnc-group">
+            <label>Grau</label>
+            <select id="rnc-grau">
+              <option value="">Selecione...</option>
+              <option value="Menor">Menor</option>
+              <option value="Maior">Maior</option>
+            </select>
+          </div>
+        </div>
+        <div class="rnc-grid-3" style="margin-top:12px;">
+          <div class="rnc-group">
+            <label>Tipo de NC</label>
+            <select id="rnc-tipo">
+              <option value="">Selecione...</option>
+              <option value="Processo">Processo</option>
+              <option value="Produto">Produto</option>
+              <option value="Serviço">Serviço</option>
+              <option value="Comportamento">Comportamento</option>
+              <option value="Segurança">Segurança</option>
+              <option value="Documentação">Documentação</option>
+            </select>
+          </div>
+          <div class="rnc-group">
+            <label>Processo / Produto / Serviço</label>
+            <input type="text" id="rnc-processo" placeholder="Identifique o processo ou produto"/>
+          </div>
+          <div class="rnc-group">
+            <label>Norma / Requisito</label>
+            <input type="text" id="rnc-norma" placeholder="ex: ISO 9001, Procedimento X"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 2: DESCRIÇÃO -->
+      <div class="rnc-section">
+        <div class="rnc-section-title">2. Descrição da Não Conformidade</div>
+        <div class="rnc-group">
+          <label>Descreva o que foi encontrado fora do padrão</label>
+          <textarea id="rnc-descricao" rows="4" placeholder="Descreva detalhadamente o problema identificado, incluindo evidências observadas..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 3: CAUSA RAIZ -->
+      <div class="rnc-section">
+        <div class="rnc-section-title">3. Análise de Causa Raiz</div>
+        <div class="rnc-grid-2">
+          <div class="rnc-group">
+            <label>5 Porquês — Análise</label>
+            <div class="porques-wrap">
+              <div class="porque-row"><span class="porque-num">1°</span><input type="text" id="rnc-p1" placeholder="Por quê ocorreu?"/></div>
+              <div class="porque-row"><span class="porque-num">2°</span><input type="text" id="rnc-p2" placeholder="Por quê?"/></div>
+              <div class="porque-row"><span class="porque-num">3°</span><input type="text" id="rnc-p3" placeholder="Por quê?"/></div>
+              <div class="porque-row"><span class="porque-num">4°</span><input type="text" id="rnc-p4" placeholder="Por quê?"/></div>
+              <div class="porque-row"><span class="porque-num">5°</span><input type="text" id="rnc-p5" placeholder="Por quê?"/></div>
+            </div>
+          </div>
+          <div class="rnc-group">
+            <label>Causa Raiz Identificada</label>
+            <textarea id="rnc-causa-raiz" rows="7" placeholder="Com base nos 5 porquês, descreva a causa raiz do problema..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 4 + 5: AÇÕES -->
+      <div class="rnc-section">
+        <div class="rnc-acoes-grid">
+          <div>
+            <div class="rnc-section-title">4. Ação Imediata / Contenção</div>
+            <div id="rnc-contencoes">
+              <div class="rnc-acao-row">
+                <input type="text" class="rnc-acao-input" placeholder="Descreva a ação de contenção"/>
+                <input type="text" class="rnc-resp-input" placeholder="Responsável"/>
+                <input type="date" class="rnc-prazo-input"/>
+                <button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button>
+              </div>
+            </div>
+            <button class="rnc-add-row" onclick="adicionarContencao()">+ Adicionar linha</button>
+          </div>
+          <div>
+            <div class="rnc-section-title">5. Ação Corretiva / Preventiva</div>
+            <div id="rnc-corretivas">
+              <div class="rnc-acao-row rnc-acao-row-corr">
+                <input type="text" class="rnc-acao-input" placeholder="Descreva a ação corretiva"/>
+                <input type="date" class="rnc-prazo-input"/>
+                <button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button>
+              </div>
+            </div>
+            <button class="rnc-add-row" onclick="adicionarCorretiva()">+ Adicionar linha</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 6: VERIFICAÇÃO -->
+      <div class="rnc-section">
+        <div class="rnc-section-title">6. Verificação da Eficácia</div>
+        <div class="rnc-grid-3">
+          <div class="rnc-group">
+            <label>Data da Verificação</label>
+            <input type="date" id="rnc-data-verif"/>
+          </div>
+          <div class="rnc-group">
+            <label>Resultado / Evidência</label>
+            <input type="text" id="rnc-evidencia" placeholder="Descreva a evidência de eficácia"/>
+          </div>
+          <div class="rnc-group">
+            <label>Status</label>
+            <select id="rnc-status-verif">
+              <option value="">Selecione...</option>
+              <option value="Eficaz">✅ Eficaz</option>
+              <option value="Não Eficaz">❌ Não Eficaz</option>
+              <option value="Em Acompanhamento">🔄 Em Acompanhamento</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 7: ASSINATURAS -->
+      <div class="rnc-section">
+        <div class="rnc-section-title">7. Responsáveis</div>
+        <div class="rnc-grid-2">
+          <div class="rnc-group">
+            <label>Nome do Colaborador</label>
+            <input type="text" id="rnc-colab-nome" placeholder="Nome completo"/>
+          </div>
+          <div class="rnc-group">
+            <label>Nome do Líder / Responsável</label>
+            <select id="rnc-lider-nome">
+              <option value="">Selecione o líder...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 8: ENCERRAMENTO -->
+      <div class="rnc-section">
+        <div class="rnc-section-title">8. Encerramento</div>
+        <div class="rnc-grid-3">
+          <div class="rnc-group">
+            <label>Responsável pelo Encerramento</label>
+            <select id="rnc-resp-encerramento">
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="rnc-group">
+            <label>Data de Encerramento</label>
+            <input type="date" id="rnc-data-encerramento"/>
+          </div>
+          <div class="rnc-group">
+            <label>Status Final</label>
+            <select id="rnc-status-final">
+              <option value="Em Aberto">🔵 Em Aberto</option>
+              <option value="Em Análise">🟣 Em Análise</option>
+              <option value="Em Execução">🟡 Em Execução</option>
+              <option value="Encerrada">✅ Encerrada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-  <div class="page" id="page-nc-tratativas">
-    <div class="coming-soon"><div class="cs-icon">🔄</div><h2>Tratativas de NC</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
-  </div>
-  <div class="page" id="page-nc-indicadores">
-    <div class="coming-soon"><div class="cs-icon">📊</div><h2>Indicadores de NC</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
+
+  <!-- PAGE: NC LISTA -->
+  <div class="page" id="page-nc-lista">
+    <div class="tk-filters">
+      <input type="text" class="tk-search" id="nc-search" placeholder="🔍 Buscar por número, descrição, setor..." oninput="debounceRenderRNCs()"/>
+      <button class="filter-btn active" onclick="ncFiltro('todos',this)">Todos</button>
+      <button class="filter-btn" onclick="ncFiltro('Em Aberto',this)">Em Aberto</button>
+      <button class="filter-btn" onclick="ncFiltro('Em Análise',this)">Em Análise</button>
+      <button class="filter-btn" onclick="ncFiltro('Em Execução',this)">Em Execução</button>
+      <button class="filter-btn" onclick="ncFiltro('Encerrada',this)">Encerradas</button>
+      <span class="tk-count" id="nc-count">0 registros</span>
+    </div>
+    <div id="rnc-list"><div class="empty-state"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>Nenhum RNC registrado ainda.</p></div></div>
   </div>
   <div class="page" id="page-ind-kpis">
     <div class="coming-soon"><div class="cs-icon">🎯</div><h2>KPIs de Qualidade</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
@@ -1225,6 +1511,9 @@ function iniciarApp(user,profile){
   document.getElementById('user-name-display').textContent=profile?.nome||user.email;
   document.getElementById('user-role-display').textContent=profile?.perfil||'—';
   document.getElementById('user-menu-name').textContent=profile?.nome||user.email;
+  // Preencher campo "Aberto por" com o usuário logado
+  const tfAbertor = document.getElementById('tf-abertor');
+  if(tfAbertor) tfAbertor.value = profile?.nome||user.email;
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('app-shell').style.display='block';
   carregarDados();
@@ -1237,24 +1526,36 @@ let _appIniciado = false;
 function mostrarLogin(){
   _appIniciado=false;
   currentUser=null;currentProfile=null;
+  usuariosCadastrados=[];
   hideLoading();
+  const tfAbertor=document.getElementById('tf-abertor');
+  if(tfAbertor) tfAbertor.value='';
   document.getElementById('app-shell').style.display='none';
   document.getElementById('auth-screen').style.display='flex';
-  tickets=[];atividades=[];
+  tickets=[];atividades=[];rncs=[];
 }
 
 async function carregarPerfil(user){
   return new Promise(async(resolve)=>{
     const timer = setTimeout(()=>{
-      resolve({id:user.id,nome:user.email,email:user.email,perfil:'operador',_timeout:true});
+      const nomeFromMeta = user.user_metadata?.nome||null;
+      resolve({id:user.id,nome:nomeFromMeta||user.email,email:user.email,perfil:'operador',_timeout:true});
     }, 20000);
     try{
       const {data,error} = await _supa.from('profiles').select('*').eq('id',user.id).maybeSingle();
       clearTimeout(timer);
-      resolve(data || {id:user.id,nome:user.email,email:user.email,perfil:'operador'});
+      if(data){
+        // Garantir que nome nunca seja vazio — fallback para metadata depois email
+        if(!data.nome) data.nome = user.user_metadata?.nome||user.email;
+        resolve(data);
+      } else {
+        const nomeFromMeta = user.user_metadata?.nome||null;
+        resolve({id:user.id,nome:nomeFromMeta||user.email,email:user.email,perfil:'operador'});
+      }
     }catch(e){
       clearTimeout(timer);
-      resolve({id:user.id,nome:user.email,email:user.email,perfil:'operador'});
+      const nomeFromMeta = user.user_metadata?.nome||null;
+      resolve({id:user.id,nome:nomeFromMeta||user.email,email:user.email,perfil:'operador'});
     }
   });
 }
@@ -1274,12 +1575,17 @@ _supa.auth.onAuthStateChange(async(event,session)=>{
       setTimeout(async()=>{
         try{
           const {data}=await _supa.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
-          if(data && data.perfil !== currentProfile?.perfil){
-            currentProfile=data;
-            document.getElementById('user-role-display').textContent=data.perfil||'—';
-            document.getElementById('user-name-display').textContent=data.nome||session.user.email;
-            document.getElementById('user-menu-name').textContent=data.nome||session.user.email;
-            document.getElementById('user-avatar').textContent=(data.nome||session.user.email)[0].toUpperCase();
+          if(data){
+            if(!data.nome) data.nome = session.user.user_metadata?.nome||session.user.email;
+            if(data.nome !== currentProfile?.nome || data.perfil !== currentProfile?.perfil){
+              currentProfile=data;
+              document.getElementById('user-role-display').textContent=data.perfil||'—';
+              document.getElementById('user-name-display').textContent=data.nome;
+              document.getElementById('user-menu-name').textContent=data.nome;
+              document.getElementById('user-avatar').textContent=data.nome[0].toUpperCase();
+              const tfAbertor=document.getElementById('tf-abertor');
+              if(tfAbertor) tfAbertor.value=data.nome;
+            }
           }
         }catch(e){}
       }, 5000);
@@ -1293,10 +1599,33 @@ _supa.auth.onAuthStateChange(async(event,session)=>{
 });
 
 // ── SINCRONIZAÇÃO ──
+let usuariosCadastrados = [];
+
+async function carregarUsuarios(){
+  const {data,error}=await _supa.from('profiles').select('id,nome,email,perfil').order('nome',{ascending:true});
+  if(error) return;
+  usuariosCadastrados = data||[];
+  popularSelectResponsavel();
+}
+
+function popularSelectResponsavel(){
+  const sel = document.getElementById('tf-responsavel');
+  if(!sel) return;
+  const valorAtual = sel.value;
+  sel.innerHTML='<option value="">Selecione o responsável...</option>';
+  usuariosCadastrados.forEach(u=>{
+    const opt = document.createElement('option');
+    opt.value = u.nome||u.email;
+    opt.textContent = (u.nome||u.email) + (u.perfil?' — '+u.perfil:'');
+    sel.appendChild(opt);
+  });
+  if(valorAtual) sel.value = valorAtual;
+}
+
 async function carregarDados(){
   showLoading('Sincronizando...');
   try{
-    await Promise.all([carregarTickets(),carregarAtividades()]);
+    await Promise.all([carregarTickets(),carregarAtividades(),carregarUsuarios(),carregarRNCs()]);
     hideLoading();toast('Dados carregados','success');
   }catch(e){
     hideLoading();toast('Erro ao carregar dados: '+e.message,'error');
@@ -1404,6 +1733,9 @@ function goTo(pageId, mod, pageName){
   if(pageId==='5s-dashboard') renderDashboard();
   if(pageId==='gp-dashboard') renderGPDashboard();
   if(pageId==='gp-lista') renderTickets();
+  if(pageId==='gp-novo') popularSelectResponsavel();
+  if(pageId==='nc-novo') iniciarFormRNC();
+  if(pageId==='nc-lista') renderRNCs();
   closeSidebar();
 }
 
@@ -1720,16 +2052,19 @@ function abrirLightbox(src){document.getElementById('lightbox-img').src=src;docu
 function fecharLightbox(){document.getElementById('lightbox').classList.add('hidden');}
 
 async function abrirTicket(){
-  const abertor = document.getElementById('tf-abertor').value.trim();
-  const setor   = document.getElementById('tf-setor').value.trim();
-  const cat     = document.getElementById('tf-categoria').value;
-  const prio    = document.getElementById('tf-prioridade').value;
-  const desc    = document.getElementById('tf-descricao').value.trim();
-  const resp    = document.getElementById('tf-responsavel').value.trim();
-  const prazo   = document.getElementById('tf-prazo').value;
-  if(!abertor||!cat||!prio||!desc||!resp){alert('Preencha todos os campos obrigatórios.');return;}
+  const abertor   = document.getElementById('tf-abertor').value.trim();
+  const setor     = document.getElementById('tf-setor').value;
+  const subsetor  = document.getElementById('tf-subsetor').value.trim();
+  const cat       = document.getElementById('tf-categoria').value;
+  const prio      = document.getElementById('tf-prioridade').value;
+  const desc      = document.getElementById('tf-descricao').value.trim();
+  const resp      = document.getElementById('tf-responsavel').value;
+  const prazo     = document.getElementById('tf-prazo').value;
+  if(!abertor||!setor||!cat||!prio||!desc||!resp){alert('Preencha todos os campos obrigatórios.');return;}
+  // Monta setor completo: "Inbound / Recebimento" ou só "Inbound"
+  const setorCompleto = subsetor ? `${setor} / ${subsetor}` : setor;
   const t = {
-    abertor, setor, categoria:cat,
+    abertor, setor:setorCompleto, categoria:cat,
     prioridade:prio, descricao:desc,
     responsavel:resp, prazo,
     status:'aberto',
@@ -1749,9 +2084,14 @@ async function abrirTicket(){
 }
 
 function limparFormTicket(){
-  ['tf-abertor','tf-setor','tf-descricao','tf-responsavel','tf-prazo'].forEach(id=>document.getElementById(id).value='');
+  // Não limpa tf-abertor — é preenchido automaticamente pelo usuário logado
+  document.getElementById('tf-subsetor').value='';
+  document.getElementById('tf-descricao').value='';
+  document.getElementById('tf-prazo').value='';
+  document.getElementById('tf-setor').selectedIndex=0;
   document.getElementById('tf-categoria').selectedIndex=0;
   document.getElementById('tf-prioridade').selectedIndex=0;
+  document.getElementById('tf-responsavel').selectedIndex=0;
   tfImgsBuffer=[];
   document.getElementById('tf-img-preview').innerHTML='';
 }
@@ -1968,6 +2308,382 @@ function renderGPDashboard(){
   tickets.filter(t=>tkIsVencido(t)).forEach(t=>al.push({cor:'var(--danger)',text:`<strong>${esc(t.numero)}</strong> — ${esc(t.descricao.substring(0,60))} <span class="st-badge ${statusClass[t.status]}" style="font-size:.62rem;">${statusLabel[t.status]||esc(t.status)}</span>`,meta:`Responsável: ${esc(t.responsavel)} · Prazo: ${fmtDt(t.prazo)} · ${prioLabel[t.prioridade]||''}`}));
   tickets.filter(t=>t.prioridade==='critico'&&!['resolvido','fechado'].includes(t.status)&&!tkIsVencido(t)).forEach(t=>al.push({cor:'var(--warn)',text:`<strong>${esc(t.numero)}</strong> — ${esc(t.descricao.substring(0,60))} <span class="st-badge ${statusClass[t.status]}" style="font-size:.62rem;">${statusLabel[t.status]||esc(t.status)}</span>`,meta:`Responsável: ${esc(t.responsavel)} · Prazo: ${fmtDt(t.prazo)}`}));
   alertas.innerHTML = al.length===0?'<div class="empty-dash">✅ Nenhum ticket crítico ou vencido.</div>':al.map(a=>`<div class="alert-item"><div class="alert-dot" style="background:${a.cor};box-shadow:0 0 6px ${a.cor};"></div><div><div class="alert-text">${a.text}</div><div class="alert-meta">${a.meta}</div></div></div>`).join('');
+}
+
+// ══════════════════════════════════════════════
+// NÃO CONFORMIDADE (RNC)
+// ══════════════════════════════════════════════
+let rncs = [];
+let ncFiltroAtual = 'todos';
+let _ncSearchTimer = null;
+
+const ncStatusClass = {'Em Aberto':'st-nc-aberto','Em Análise':'st-nc-analise','Em Execução':'st-nc-execucao','Encerrada':'st-nc-encerrada'};
+const ncStatusEmoji = {'Em Aberto':'🔵','Em Análise':'🟣','Em Execução':'🟡','Encerrada':'✅'};
+
+function iniciarFormRNC(){
+  // Preencher campos automáticos
+  const dataEl = document.getElementById('rnc-data');
+  if(dataEl && !dataEl.value) dataEl.valueAsDate = new Date();
+  const respEl = document.getElementById('rnc-responsavel-abertura');
+  if(respEl) respEl.value = currentProfile?.nome||currentUser?.email||'';
+  // Número automático
+  const numEl = document.getElementById('rnc-numero');
+  if(numEl && !numEl.value){
+    const seq = String(rncs.length+1).padStart(4,'0');
+    const ano = new Date().getFullYear();
+    numEl.value = `RNC-${ano}-${seq}`;
+  }
+  // Popular selects de usuários
+  const selLider = document.getElementById('rnc-lider-nome');
+  const selEnc   = document.getElementById('rnc-resp-encerramento');
+  if(selLider){
+    selLider.innerHTML='<option value="">Selecione o líder...</option>';
+    usuariosCadastrados.forEach(u=>{
+      selLider.innerHTML+=`<option value="${esc(u.nome||u.email)}">${esc(u.nome||u.email)}${u.perfil?' — '+u.perfil:''}</option>`;
+    });
+  }
+  if(selEnc){
+    selEnc.innerHTML='<option value="">Selecione...</option>';
+    usuariosCadastrados.forEach(u=>{
+      selEnc.innerHTML+=`<option value="${esc(u.nome||u.email)}">${esc(u.nome||u.email)}</option>`;
+    });
+  }
+}
+
+function adicionarContencao(){
+  const wrap = document.getElementById('rnc-contencoes');
+  const row = document.createElement('div');
+  row.className='rnc-acao-row';
+  row.innerHTML=`<input type="text" class="rnc-acao-input" placeholder="Descreva a ação de contenção"/>
+    <input type="text" class="rnc-resp-input" placeholder="Responsável"/>
+    <input type="date" class="rnc-prazo-input"/>
+    <button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button>`;
+  wrap.appendChild(row);
+}
+
+function adicionarCorretiva(){
+  const wrap = document.getElementById('rnc-corretivas');
+  const row = document.createElement('div');
+  row.className='rnc-acao-row rnc-acao-row-corr';
+  row.innerHTML=`<input type="text" class="rnc-acao-input" placeholder="Descreva a ação corretiva"/>
+    <input type="date" class="rnc-prazo-input"/>
+    <button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button>`;
+  wrap.appendChild(row);
+}
+
+function removerAcaoRow(btn){
+  const wrap = btn.closest('#rnc-contencoes,#rnc-corretivas');
+  if(wrap && wrap.querySelectorAll('.rnc-acao-row').length>1) btn.closest('.rnc-acao-row').remove();
+}
+
+function lerAcoesContencao(){
+  return Array.from(document.querySelectorAll('#rnc-contencoes .rnc-acao-row')).map(row=>{
+    const inputs = row.querySelectorAll('input');
+    return {acao:inputs[0]?.value||'', responsavel:inputs[1]?.value||'', prazo:inputs[2]?.value||''};
+  }).filter(a=>a.acao);
+}
+
+function lerAcoesCorretivas(){
+  return Array.from(document.querySelectorAll('#rnc-corretivas .rnc-acao-row')).map(row=>{
+    const inputs = row.querySelectorAll('input');
+    return {acao:inputs[0]?.value||'', prazo:inputs[1]?.value||''};
+  }).filter(a=>a.acao);
+}
+
+function lerFormRNC(){
+  return {
+    numero:              document.getElementById('rnc-numero').value,
+    data_abertura:       document.getElementById('rnc-data').value,
+    responsavel_abertura:document.getElementById('rnc-responsavel-abertura').value,
+    setor:               document.getElementById('rnc-setor').value,
+    grau:                document.getElementById('rnc-grau').value,
+    tipo:                document.getElementById('rnc-tipo').value,
+    processo:            document.getElementById('rnc-processo').value.trim(),
+    norma:               document.getElementById('rnc-norma').value.trim(),
+    descricao:           document.getElementById('rnc-descricao').value.trim(),
+    p1:                  document.getElementById('rnc-p1').value.trim(),
+    p2:                  document.getElementById('rnc-p2').value.trim(),
+    p3:                  document.getElementById('rnc-p3').value.trim(),
+    p4:                  document.getElementById('rnc-p4').value.trim(),
+    p5:                  document.getElementById('rnc-p5').value.trim(),
+    causa_raiz:          document.getElementById('rnc-causa-raiz').value.trim(),
+    contencoes:          lerAcoesContencao(),
+    corretivas:          lerAcoesCorretivas(),
+    data_verif:          document.getElementById('rnc-data-verif').value,
+    evidencia:           document.getElementById('rnc-evidencia').value.trim(),
+    status_verif:        document.getElementById('rnc-status-verif').value,
+    colab_nome:          document.getElementById('rnc-colab-nome').value.trim(),
+    lider_nome:          document.getElementById('rnc-lider-nome').value,
+    resp_encerramento:   document.getElementById('rnc-resp-encerramento').value,
+    data_encerramento:   document.getElementById('rnc-data-encerramento').value,
+    status:              document.getElementById('rnc-status-final').value,
+  };
+}
+
+async function salvarRNC(){
+  const d = lerFormRNC();
+  if(!d.setor||!d.grau||!d.tipo||!d.descricao){alert('Preencha: Setor, Grau, Tipo e Descrição.');return;}
+  showLoading('Salvando RNC...');
+  const payload = {...d, user_id:currentUser.id, contencoes:JSON.stringify(d.contencoes), corretivas:JSON.stringify(d.corretivas)};
+  const {data,error} = await _supa.from('nao_conformidades').insert(payload).select().single();
+  hideLoading();
+  if(error){toast('Erro ao salvar: '+error.message,'error');return;}
+  toast('RNC '+d.numero+' salva com sucesso!','success');
+  await carregarRNCs();
+  atualizarNCBadge();
+  goTo('nc-lista','Não Conformidade','Registros');
+}
+
+async function carregarRNCs(){
+  const {data,error}=await _supa.from('nao_conformidades').select('*').order('created_at',{ascending:false});
+  if(error){toast('Erro ao carregar RNCs: '+error.message,'error');return;}
+  rncs=data||[];
+  atualizarNCBadge();
+  renderRNCs();
+}
+
+function atualizarNCBadge(){
+  const abertas=rncs.filter(r=>r.status!=='Encerrada').length;
+  const badge=document.getElementById('nc-badge');
+  if(badge){badge.style.display=abertas>0?'inline':'none';badge.textContent=abertas;}
+}
+
+function ncFiltro(f,btn){
+  ncFiltroAtual=f;
+  document.querySelectorAll('#page-nc-lista .filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderRNCs();
+}
+
+function debounceRenderRNCs(){clearTimeout(_ncSearchTimer);_ncSearchTimer=setTimeout(renderRNCs,250);}
+
+function renderRNCs(){
+  const list=document.getElementById('rnc-list');
+  if(!list) return;
+  const q=(document.getElementById('nc-search')||{}).value||'';
+  let filtrado=rncs;
+  if(ncFiltroAtual!=='todos') filtrado=filtrado.filter(r=>r.status===ncFiltroAtual);
+  if(q) filtrado=filtrado.filter(r=>
+    (r.numero||'').toLowerCase().includes(q.toLowerCase())||
+    (r.descricao||'').toLowerCase().includes(q.toLowerCase())||
+    (r.setor||'').toLowerCase().includes(q.toLowerCase())||
+    (r.responsavel_abertura||'').toLowerCase().includes(q.toLowerCase())
+  );
+  const cnt=document.getElementById('nc-count');
+  if(cnt) cnt.textContent=filtrado.length+' registro'+(filtrado.length!==1?'s':'');
+  if(filtrado.length===0){
+    list.innerHTML=`<div class="empty-state"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>${rncs.length===0?'Nenhum RNC registrado ainda.':'Nenhum resultado para o filtro.'}</p></div>`;
+    return;
+  }
+  list.innerHTML=filtrado.map(r=>{
+    const grauClass=r.grau==='Maior'?'badge-grau-maior':'badge-grau-menor';
+    const stClass=ncStatusClass[r.status]||'st-nc-aberto';
+    const dtAb=r.data_abertura?r.data_abertura.split('-').reverse().join('/'):'—';
+    return `<div class="rnc-card">
+      <div class="rnc-card-inner">
+        <div class="rnc-card-stripe ${esc(r.grau||'')}"></div>
+        <div class="rnc-card-body">
+          <div class="rnc-card-top">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <span class="tk-num">${esc(r.numero)}</span>
+              <span style="font-size:.9rem;font-weight:600;color:var(--text);">${esc((r.descricao||'').substring(0,80))}${(r.descricao||'').length>80?'...':''}</span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+              <span class="${grauClass}">${esc(r.grau||'—')}</span>
+              <span class="st-badge ${stClass}">${ncStatusEmoji[r.status]||''} ${esc(r.status)}</span>
+            </div>
+          </div>
+          <div class="tk-meta">
+            <div class="tk-meta-item">📁 ${esc(r.tipo||'—')}</div>
+            <div class="tk-meta-item">🏠 ${esc(r.setor||'—')}</div>
+            <div class="tk-meta-item">👤 ${esc(r.responsavel_abertura||'—')}</div>
+            <div class="tk-meta-item" style="color:var(--muted2);font-size:.68rem;">📅 ${dtAb}</div>
+          </div>
+        </div>
+      </div>
+      <div class="rnc-card-footer">
+        <div style="font-size:.7rem;color:var(--muted2);">${esc(r.norma||'Sem norma referenciada')}</div>
+        <div class="tk-actions">
+          <button class="tk-btn" onclick="gerarDocxRNCById('${r.id}')">📄 Documento</button>
+          ${podeExcluir()?`<button class="tk-btn danger" onclick="excluirRNC('${r.id}')">✕ Excluir</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function excluirRNC(id){
+  if(!podeExcluir()){toast('Sem permissão.','error');return;}
+  if(!confirm('Excluir este RNC?'))return;
+  showLoading('Excluindo...');
+  const {error}=await _supa.from('nao_conformidades').delete().eq('id',id);
+  hideLoading();
+  if(error){toast('Erro: '+error.message,'error');return;}
+  rncs=rncs.filter(r=>r.id!==id);
+  toast('RNC excluída.','info');
+  atualizarNCBadge();
+  renderRNCs();
+}
+
+function limparFormRNC(){
+  if(!confirm('Limpar o formulário?'))return;
+  ['rnc-processo','rnc-norma','rnc-descricao','rnc-p1','rnc-p2','rnc-p3','rnc-p4','rnc-p5','rnc-causa-raiz','rnc-evidencia','rnc-colab-nome','rnc-data-verif','rnc-data-encerramento'].forEach(id=>document.getElementById(id).value='');
+  ['rnc-setor','rnc-grau','rnc-tipo','rnc-status-verif','rnc-lider-nome','rnc-resp-encerramento'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  document.getElementById('rnc-status-final').selectedIndex=0;
+  document.getElementById('rnc-contencoes').innerHTML=`<div class="rnc-acao-row"><input type="text" class="rnc-acao-input" placeholder="Descreva a ação de contenção"/><input type="text" class="rnc-resp-input" placeholder="Responsável"/><input type="date" class="rnc-prazo-input"/><button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button></div>`;
+  document.getElementById('rnc-corretivas').innerHTML=`<div class="rnc-acao-row rnc-acao-row-corr"><input type="text" class="rnc-acao-input" placeholder="Descreva a ação corretiva"/><input type="date" class="rnc-prazo-input"/><button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button></div>`;
+  iniciarFormRNC();
+}
+
+// ── GERAÇÃO DO DOCX ──
+function fmtDataDocx(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+
+async function gerarDocxRNCById(id){
+  const r=rncs.find(x=>x.id===id);
+  if(!r){toast('RNC não encontrada.','error');return;}
+  const d={...r,contencoes:JSON.parse(r.contencoes||'[]'),corretivas:JSON.parse(r.corretivas||'[]')};
+  await _gerarDocxComDados(d);
+}
+
+async function gerarDocxRNC(){
+  const d=lerFormRNC();
+  if(!d.descricao){alert('Preencha ao menos a Descrição antes de gerar o documento.');return;}
+  await _gerarDocxComDados(d);
+}
+
+async function _gerarDocxComDados(d){
+  showLoading('Gerando documento...');
+  try{
+    // Carregar docx.js via CDN
+    if(!window.docx){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js';
+        s.onload=res;s.onerror=rej;
+        document.head.appendChild(s);
+      });
+    }
+    const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,AlignmentType,WidthType,BorderStyle,ShadingType,VerticalAlign,HeadingLevel}=window.docx;
+
+    const FULL=9360,H1=3120,H2=1872,H3=1872,H4=936,H5=1560;
+    const brd=(c='CCCCCC')=>({style:BorderStyle.SINGLE,size:1,color:c});
+    const borders=(c='CCCCCC')=>({top:brd(c),bottom:brd(c),left:brd(c),right:brd(c)});
+    const cellM={top:80,bottom:80,left:120,right:120};
+    const noBorder={style:BorderStyle.NONE,size:0,color:'FFFFFF'};
+    const noBorders={top:noBorder,bottom:noBorder,left:noBorder,right:noBorder};
+
+    function hdr(txt){return new Paragraph({children:[new TextRun({text:txt,bold:true,size:20,font:'Arial',color:'FFFFFF'})],alignment:AlignmentType.CENTER,shading:{fill:'1E3A5F',type:ShadingType.CLEAR}});}
+    function cell(txt,opts={}){return new TableCell({borders:borders(opts.brdColor||'CCCCCC'),width:{size:opts.w||FULL,type:WidthType.DXA},shading:{fill:opts.fill||'FFFFFF',type:ShadingType.CLEAR},margins:cellM,verticalAlign:VerticalAlign.CENTER,children:[new Paragraph({children:[new TextRun({text:String(txt||'—'),size:18,font:'Arial',bold:opts.bold||false,color:opts.color||'000000'})],alignment:opts.align||AlignmentType.LEFT})]});}
+    function labelCell(txt,w){return cell(txt,{fill:'EBF3FA',bold:true,w,color:'1E3A5F'});}
+    function row(...cells){return new TableRow({children:cells});}
+    function tbl(colWidths,...rows){return new Table({width:{size:FULL,type:WidthType.DXA},columnWidths:colWidths,rows});}
+    function section(txt){return new Paragraph({children:[new TextRun({text:txt,bold:true,size:22,font:'Arial',color:'FFFFFF'})],shading:{fill:'2E6DA4',type:ShadingType.CLEAR},spacing:{before:160,after:0}});}
+    function spacer(){return new Paragraph({children:[new TextRun({text:'',size:8})],spacing:{before:40,after:40}});}
+
+    const porques=[d.p1,d.p2,d.p3,d.p4,d.p5].filter(Boolean).map((p,i)=>
+      row(labelCell(`${i+1}° Porquê`,H2),cell(p,{w:FULL-H2}))
+    );
+    if(porques.length===0) porques.push(row(labelCell('Análise',H2),cell('—',{w:FULL-H2})));
+
+    const contRows=(d.contencoes||[]).length>0
+      ? d.contencoes.map(a=>row(cell(a.acao,{w:H1}),cell(a.responsavel,{w:H2}),cell(fmtDataDocx(a.prazo),{w:H3})))
+      : [row(cell('—',{w:H1}),cell('—',{w:H2}),cell('—',{w:H3}))];
+
+    const corrRows=(d.corretivas||[]).length>0
+      ? d.corretivas.map(a=>row(cell(a.acao,{w:FULL-H3}),cell(fmtDataDocx(a.prazo),{w:H3})))
+      : [row(cell('—',{w:FULL-H3}),cell('—',{w:H3}))];
+
+    const doc=new Document({
+      sections:[{
+        properties:{page:{size:{width:12240,height:15840},margin:{top:1080,right:1080,bottom:1080,left:1080}}},
+        children:[
+          // Cabeçalho
+          tbl([H1*2,FULL-H1*2],
+            row(
+              new TableCell({borders:noBorders,width:{size:H1*2,type:WidthType.DXA},margins:cellM,children:[new Paragraph({children:[new TextRun({text:'IN·HAUS',bold:true,size:32,font:'Arial',color:'1E3A5F'})]}),new Paragraph({children:[new TextRun({text:'Sistema de Qualidade',size:16,font:'Arial',color:'5E8FAA'})],spacing:{before:40}})]}),
+              new TableCell({borders:noBorders,width:{size:FULL-H1*2,type:WidthType.DXA},margins:cellM,children:[new Paragraph({alignment:AlignmentType.RIGHT,children:[new TextRun({text:'REGISTRO DE NÃO CONFORMIDADE',bold:true,size:24,font:'Arial',color:'1E3A5F'})]}),new Paragraph({alignment:AlignmentType.RIGHT,children:[new TextRun({text:'RNC – Formulário de Identificação, Análise e Ação Corretiva',size:16,font:'Arial',color:'5E8FAA'})]})]}),
+            )
+          ),
+          spacer(),
+
+          // Seção 1
+          section('1. IDENTIFICAÇÃO'),
+          tbl([H4,H4,H3,H3,H2],
+            row(labelCell('Nº RNC',H4),labelCell('Data Abertura',H4),labelCell('Responsável',H3),labelCell('Setor / Área',H3),labelCell('Grau',H2)),
+            row(cell(d.numero,{w:H4}),cell(fmtDataDocx(d.data_abertura),{w:H4}),cell(d.responsavel_abertura,{w:H3}),cell(d.setor,{w:H3}),cell(d.grau,{w:H2,bold:true,color:d.grau==='Maior'?'CC0000':'B45309'}))
+          ),
+          spacer(),
+          tbl([H3,H3,H3],
+            row(labelCell('Tipo de NC',H3),labelCell('Processo / Produto / Serviço',H3),labelCell('Norma / Requisito',H3)),
+            row(cell(d.tipo,{w:H3}),cell(d.processo,{w:H3}),cell(d.norma,{w:H3}))
+          ),
+          spacer(),
+
+          // Seção 2
+          section('2. DESCRIÇÃO DA NÃO CONFORMIDADE'),
+          tbl([FULL],row(new TableCell({borders:borders(),width:{size:FULL,type:WidthType.DXA},margins:cellM,children:[new Paragraph({children:[new TextRun({text:d.descricao||'—',size:18,font:'Arial'})]})],shading:{fill:'FFFFF0',type:ShadingType.CLEAR}}))),
+          spacer(),
+
+          // Seção 3
+          section('3. ANÁLISE DE CAUSA RAIZ'),
+          tbl([H2,FULL-H2],row(labelCell('Método',H2),labelCell('Causa Identificada',FULL-H2))),
+          tbl([H2,FULL-H2],...porques),
+          tbl([H2,FULL-H2],row(new TableCell({borders:borders(),width:{size:H2,type:WidthType.DXA},margins:cellM,shading:{fill:'EBF3FA',type:ShadingType.CLEAR},children:[new Paragraph({children:[new TextRun({text:'Causa Raiz',bold:true,size:18,font:'Arial',color:'1E3A5F'})]})]  }),cell(d.causa_raiz,{w:FULL-H2,fill:'FFFFF0'}))),
+          spacer(),
+
+          // Seção 4
+          section('4. AÇÃO IMEDIATA / CONTENÇÃO'),
+          tbl([H1,H2,H3],row(labelCell('Ação (Contenção)',H1),labelCell('Responsável',H2),labelCell('Prazo',H3)),...contRows),
+          spacer(),
+
+          // Seção 5
+          section('5. AÇÃO CORRETIVA / PREVENTIVA'),
+          tbl([FULL-H3,H3],row(labelCell('Ação Corretiva',FULL-H3),labelCell('Prazo',H3)),...corrRows),
+          spacer(),
+
+          // Seção 6
+          section('6. VERIFICAÇÃO DA EFICÁCIA'),
+          tbl([H3,H3,H3],
+            row(labelCell('Data Verificação',H3),labelCell('Resultado / Evidência',H3),labelCell('Status',H3)),
+            row(cell(fmtDataDocx(d.data_verif),{w:H3}),cell(d.evidencia,{w:H3}),cell(d.status_verif,{w:H3}))
+          ),
+          spacer(),
+
+          // Seção 7
+          section('7. ASSINATURAS'),
+          tbl([H1,H4,H5,H1,H4],
+            row(labelCell('Nome do Colaborador',H1),labelCell('Assinatura',H4),new TableCell({borders:noBorders,width:{size:H5,type:WidthType.DXA},children:[new Paragraph({children:[]})]}),labelCell('Nome do Líder',H1),labelCell('Assinatura',H4)),
+            row(cell(d.colab_nome,{w:H1}),cell(' ',{w:H4}),new TableCell({borders:noBorders,width:{size:H5,type:WidthType.DXA},children:[new Paragraph({children:[]})]}),cell(d.lider_nome,{w:H1}),cell(' ',{w:H4}))
+          ),
+          spacer(),
+
+          // Seção 8
+          section('8. ENCERRAMENTO'),
+          tbl([H1,H2,H3],
+            row(labelCell('Responsável pelo Encerramento',H1),labelCell('Assinatura',H2),labelCell('Data de Encerramento',H3)),
+            row(cell(d.resp_encerramento,{w:H1}),cell(' ',{w:H2}),cell(fmtDataDocx(d.data_encerramento),{w:H3}))
+          ),
+          spacer(),
+
+          // Rodapé
+          new Paragraph({children:[new TextRun({text:'Documento controlado – Revisão 00  |  Adaptável conforme ISO 9001, ISO 14001 e demais normas aplicáveis.',size:14,font:'Arial',color:'888888',italics:true})],alignment:AlignmentType.CENTER,border:{top:{style:BorderStyle.SINGLE,size:1,color:'CCCCCC',space:1}},spacing:{before:200}}),
+        ]
+      }]
+    });
+
+    const blob=await Packer.toBlob(doc);
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`${d.numero||'RNC'}_${(d.data_abertura||new Date().toISOString().slice(0,10)).replace(/-/g,'')}.docx`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Documento gerado e baixado!','success');
+  }catch(e){
+    toast('Erro ao gerar documento: '+e.message,'error');
+  }finally{
+    hideLoading();
+  }
 }
 
 build();
