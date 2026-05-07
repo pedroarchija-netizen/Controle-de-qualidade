@@ -1527,6 +1527,7 @@ function mostrarLogin(){
   _appIniciado=false;
   currentUser=null;currentProfile=null;
   usuariosCadastrados=[];
+  if(_realtimeChannel){_supa.removeChannel(_realtimeChannel);_realtimeChannel=null;}
   hideLoading();
   const tfAbertor=document.getElementById('tf-abertor');
   if(tfAbertor) tfAbertor.value='';
@@ -1622,11 +1623,105 @@ function popularSelectResponsavel(){
   if(valorAtual) sel.value = valorAtual;
 }
 
+// ── REALTIME ──
+let _realtimeChannel = null;
+
+function iniciarRealtime(){
+  if(_realtimeChannel) _supa.removeChannel(_realtimeChannel);
+
+  _realtimeChannel = _supa
+    .channel('inhaus-realtime')
+    .on('postgres_changes',{event:'*',schema:'public',table:'tickets'},       payload=>_handleRealtimeTicket(payload))
+    .on('postgres_changes',{event:'*',schema:'public',table:'ticket_historico'},payload=>_handleRealtimeHistorico(payload))
+    .on('postgres_changes',{event:'*',schema:'public',table:'atividades_5s'}, payload=>_handleRealtimeAtividade(payload))
+    .on('postgres_changes',{event:'*',schema:'public',table:'nao_conformidades'},payload=>_handleRealtimeRNC(payload))
+    .subscribe();
+}
+
+function _handleRealtimeTicket(p){
+  if(p.eventType==='INSERT'){
+    // Só adiciona se não existir ainda (evita duplicar optimistic)
+    if(!tickets.find(t=>t.id===p.new.id)){
+      tickets.unshift(_mapTicket({...p.new,ticket_historico:[]}));
+      atualizarGPBadge();renderTickets();
+    }
+  } else if(p.eventType==='UPDATE'){
+    const idx=tickets.findIndex(t=>t.id===p.new.id);
+    if(idx>=0){
+      tickets[idx]={...tickets[idx],..._mapTicketPartial(p.new)};
+      atualizarGPBadge();renderTickets();
+      if(tkModalId===p.new.id) abrirModal(p.new.id);
+    }
+  } else if(p.eventType==='DELETE'){
+    tickets=tickets.filter(t=>t.id!==p.old.id);
+    atualizarGPBadge();renderTickets();
+    if(tkModalId===p.old.id) fecharModal();
+  }
+}
+
+function _handleRealtimeHistorico(p){
+  if(p.eventType==='INSERT'){
+    const t=tickets.find(x=>x.id===p.new.ticket_id);
+    if(t){
+      const h=_mapHistorico(p.new);
+      if(!t.historico.find(x=>x._id===p.new.id)){
+        t.historico.push(h);
+        if(tkModalId===t.id) abrirModal(t.id);
+      }
+    }
+  }
+}
+
+function _handleRealtimeAtividade(p){
+  if(p.eventType==='INSERT'){
+    if(!atividades.find(a=>a.id===p.new.id)){
+      atividades.unshift(_mapAtividade(p.new));renderAtividades();
+    }
+  } else if(p.eventType==='UPDATE'){
+    const idx=atividades.findIndex(a=>a.id===p.new.id);
+    if(idx>=0){atividades[idx]=_mapAtividade(p.new);renderAtividades();}
+  } else if(p.eventType==='DELETE'){
+    atividades=atividades.filter(a=>a.id!==p.old.id);renderAtividades();
+  }
+}
+
+function _handleRealtimeRNC(p){
+  if(p.eventType==='INSERT'){
+    if(!rncs.find(r=>r.id===p.new.id)){rncs.unshift(p.new);atualizarNCBadge();renderRNCs();}
+  } else if(p.eventType==='UPDATE'){
+    const idx=rncs.findIndex(r=>r.id===p.new.id);
+    if(idx>=0){rncs[idx]=p.new;atualizarNCBadge();renderRNCs();}
+  } else if(p.eventType==='DELETE'){
+    rncs=rncs.filter(r=>r.id!==p.old.id);atualizarNCBadge();renderRNCs();
+  }
+}
+
+// Funções de mapeamento reutilizáveis
+function _mapTicket(t){
+  return {
+    id:t.id,numero:t.numero,abertor:t.abertor,setor:t.setor,
+    categoria:t.categoria,prioridade:t.prioridade,descricao:t.descricao,
+    responsavel:t.responsavel,prazo:t.prazo,status:t.status,imagens:t.imagens||[],
+    aberturaStr:new Date(t.criado_em).toLocaleDateString('pt-BR')+' '+new Date(t.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    historico:(t.ticket_historico||[]).sort((a,b)=>new Date(a.criado_em)-new Date(b.criado_em)).map(_mapHistorico)
+  };
+}
+function _mapTicketPartial(t){
+  return {status:t.status,prioridade:t.prioridade,responsavel:t.responsavel,prazo:t.prazo,descricao:t.descricao,setor:t.setor};
+}
+function _mapHistorico(h){
+  return {_id:h.id,dt:new Date(h.criado_em).toLocaleDateString('pt-BR')+' '+new Date(h.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),usuario:h.usuario,acao:h.acao,nota:h.nota,status:h.status,imagens:h.imagens||[]};
+}
+function _mapAtividade(a){
+  return {id:a.id,atividade:a.atividade,responsavel:a.responsavel,prazo:a.prazo,criticidade:a.criticidade,setor:a.setor,status:a.status};
+}
+
 async function carregarDados(){
   showLoading('Sincronizando...');
   try{
     await Promise.all([carregarTickets(),carregarAtividades(),carregarUsuarios(),carregarRNCs()]);
-    hideLoading();toast('Dados carregados','success');
+    hideLoading();
+    iniciarRealtime(); // inicia WebSocket após carga inicial
   }catch(e){
     hideLoading();toast('Erro ao carregar dados: '+e.message,'error');
   }
@@ -1636,16 +1731,7 @@ async function carregarDados(){
 async function carregarTickets(){
   const {data,error}=await _supa.from('tickets').select('*, ticket_historico(*)').order('criado_em',{ascending:false});
   if(error){toast('Erro ao carregar tickets: '+error.message,'error');return;}
-  tickets=(data||[]).map(t=>({
-    id:t.id,numero:t.numero,abertor:t.abertor,setor:t.setor,
-    categoria:t.categoria,prioridade:t.prioridade,descricao:t.descricao,
-    responsavel:t.responsavel,prazo:t.prazo,status:t.status,imagens:t.imagens||[],
-    aberturaStr:new Date(t.criado_em).toLocaleDateString('pt-BR')+' '+new Date(t.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
-    historico:(t.ticket_historico||[]).sort((a,b)=>new Date(a.criado_em)-new Date(b.criado_em)).map(h=>({
-      dt:new Date(h.criado_em).toLocaleDateString('pt-BR')+' '+new Date(h.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
-      usuario:h.usuario,acao:h.acao,nota:h.nota,status:h.status,imagens:h.imagens||[]
-    }))
-  }));
+  tickets=(data||[]).map(_mapTicket);
   atualizarGPBadge();
 }
 
@@ -1654,15 +1740,24 @@ async function salvarTicket(t){
   const payload={abertor:t.abertor,setor:t.setor||null,categoria:t.categoria,prioridade:t.prioridade,descricao:t.descricao,responsavel:t.responsavel,prazo:t.prazo||null,status:'aberto',imagens:imgsSalvas,user_id:currentUser.id};
   const {data,error}=await _supa.from('tickets').insert(payload).select().single();
   if(error){toast('Erro ao salvar ticket: '+error.message,'error');return null;}
-  await _supa.from('ticket_historico').insert({ticket_id:data.id,usuario:t.abertor,user_id:currentUser.id,acao:'Ticket aberto',nota:t.descricao,status:'aberto',imagens:imgsSalvas});
+  // Inserir histórico em background — Realtime cuidará da UI
+  _supa.from('ticket_historico').insert({ticket_id:data.id,usuario:t.abertor,user_id:currentUser.id,acao:'Ticket aberto',nota:t.descricao,status:'aberto',imagens:imgsSalvas});
   return data;
 }
 
 async function salvarHistorico(ticketId,entry,novasImagens){
   const imgsSalvas=await uploadImagens(novasImagens,`tickets/${ticketId}`);
-  const {error}=await _supa.from('ticket_historico').insert({ticket_id:ticketId,usuario:currentProfile?.nome||currentUser.email,user_id:currentUser.id,acao:entry.acao,nota:entry.nota,status:entry.status,imagens:imgsSalvas});
-  if(error){toast('Erro ao salvar histórico: '+error.message,'error');return false;}
-  if(entry.novoStatus) await _supa.from('tickets').update({status:entry.novoStatus,atualizado_em:new Date().toISOString()}).eq('id',ticketId);
+  // Optimistic: atualiza local imediatamente
+  const t=tickets.find(x=>x.id===ticketId);
+  if(t){
+    const h={_id:Date.now(),dt:nowStr(),usuario:currentProfile?.nome||currentUser.email,acao:entry.acao,nota:entry.nota,status:entry.status,imagens:imgsSalvas};
+    t.historico.push(h);
+    if(entry.novoStatus) t.status=entry.novoStatus;
+    renderTickets();
+  }
+  // Persiste em background — Realtime sincroniza de volta se mudar
+  _supa.from('ticket_historico').insert({ticket_id:ticketId,usuario:currentProfile?.nome||currentUser.email,user_id:currentUser.id,acao:entry.acao,nota:entry.nota,status:entry.status,imagens:imgsSalvas});
+  if(entry.novoStatus) _supa.from('tickets').update({status:entry.novoStatus,atualizado_em:new Date().toISOString()}).eq('id',ticketId);
   return imgsSalvas;
 }
 
@@ -1883,16 +1978,24 @@ async function adicionarAtividade(){
   const crit=document.getElementById('e-criticidade').value;
   const setor=document.getElementById('e-setor').value;
   if(!ativ||!resp||!prazo||!crit){alert('Preencha todos os campos obrigatórios.');return;}
-  showLoading('Salvando atividade...');
-  const saved = await salvarAtividade({atividade:ativ,responsavel:resp,prazo,criticidade:crit,setor});
-  hideLoading();
-  if(!saved)return;
-  atividades.unshift({id:saved.id,atividade:ativ,responsavel:resp,prazo,criticidade:crit,setor,status:'pendente'});
+  // Optimistic: adiciona na UI imediatamente
+  const tempId='temp_'+Date.now();
+  atividades.unshift({id:tempId,atividade:ativ,responsavel:resp,prazo,criticidade:crit,setor,status:'pendente'});
   ['e-atividade','e-responsavel','e-prazo'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('e-criticidade').selectedIndex=0;
   document.getElementById('e-setor').selectedIndex=0;
-  toast('Atividade adicionada!','success');
   renderAtividades();
+  // Persiste em background
+  const {data,error}=await _supa.from('atividades_5s').insert({atividade:ativ,responsavel:resp,prazo:prazo||null,criticidade:crit,setor:setor||null,status:'pendente',user_id:currentUser.id}).select().single();
+  if(error){
+    atividades=atividades.filter(a=>a.id!==tempId);
+    renderAtividades();
+    toast('Erro ao salvar: '+error.message,'error');
+    return;
+  }
+  const idx=atividades.findIndex(a=>a.id===tempId);
+  if(idx>=0) atividades[idx]=_mapAtividade(data);
+  toast('Atividade adicionada!','success');
 }
 async function toggleStatus(id){
   const a=atividades.find(x=>x.id===id);
@@ -1900,16 +2003,26 @@ async function toggleStatus(id){
   const c=['pendente','andamento','concluido'];
   const novoStatus=c[(c.indexOf(a.status)+1)%c.length];
   a.status=novoStatus;
-  renderAtividades(); // atualiza UI imediatamente (optimistic update)
+  renderAtividades();
   const {error}=await _supa.from('atividades_5s').update({status:novoStatus,atualizado_em:new Date().toISOString()}).eq('id',id);
   if(error){
-    // reverter se falhou
     a.status=c[(c.indexOf(novoStatus)-1+c.length)%c.length];
     renderAtividades();
     toast('Erro ao atualizar status: '+error.message,'error');
   }
 }
-async function removerAtividade(id){if(!confirm('Remover atividade?'))return;showLoading('Removendo...');const ok=await excluirAtividade(id);hideLoading();if(!ok)return;atividades=atividades.filter(x=>x.id!==id);toast('Atividade removida.','info');renderAtividades();}
+async function removerAtividade(id){
+  if(!confirm('Remover atividade?'))return;
+  const backup=atividades.find(a=>a.id===id);
+  atividades=atividades.filter(a=>a.id!==id);
+  renderAtividades();
+  const {error}=await _supa.from('atividades_5s').delete().eq('id',id);
+  if(error){
+    if(backup) atividades.push(backup);
+    renderAtividades();
+    toast('Erro ao remover: '+error.message,'error');
+  } else { toast('Atividade removida.','info'); }
+}
 function filtrar(f,btn){filtroAtual=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderAtividades();}
 function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function isVencido(prazo,status){if(status==='concluido'||!prazo)return false;return prazo<todayStr();}
@@ -2077,7 +2190,6 @@ async function abrirTicket(){
   tfImgsBuffer=[];
   limparFormTicket();
   toast('Ticket '+saved.numero+' aberto com sucesso!','success');
-  await carregarTickets();
   atualizarGPBadge();
   goTo('gp-lista','Gestão de Problemas','Todos os Tickets');
   renderTickets();
@@ -2230,7 +2342,6 @@ async function atualizarTicket(){
   updImgsBuffer=[];
   toast('Atualização registrada!','success');
   atualizarGPBadge();
-  await carregarTickets(); // recarrega do banco para garantir consistência
   abrirModal(tkModalId);
   renderTickets();
 }
@@ -2254,15 +2365,18 @@ function podeExcluir(){return currentProfile?.perfil==='admin';}
 async function excluirTicket(id){
   if(!podeExcluir()){toast('Sem permissão para excluir tickets.','error');return;}
   if(!confirm('Excluir este ticket?'))return;
-  showLoading('Excluindo...');
-  const ok = await excluirTicketDB(id);
-  hideLoading();
-  if(!ok)return;
+  // Optimistic: remove da UI imediatamente
   if(tkModalId===id) fecharModal();
-  tickets = tickets.filter(x=>x.id!==id);
+  tickets=tickets.filter(x=>x.id!==id);
   toast('Ticket excluído.','info');
   atualizarGPBadge();
   renderTickets();
+  // Persiste em background
+  const {error}=await _supa.from('tickets').delete().eq('id',id);
+  if(error){
+    toast('Erro ao excluir — recarregando...','error');
+    carregarTickets().then(()=>{atualizarGPBadge();renderTickets();});
+  }
 }
 
 function atualizarGPBadge(){
