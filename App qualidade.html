@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#080F1F"/>
 <title>IN·HAUS — Qualidade</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --bg:#020810;--surface:#070E1C;--surface2:#0A1422;--surface3:#0E1A2C;--surface4:#121F33;
@@ -1148,8 +1148,8 @@ body{
 // ══════════════════════════════════════════════
 // ⚠️  SUBSTITUA OS VALORES ABAIXO PELOS DO SEU PROJETO
 // Project Settings > API no painel do Supabase
-const SUPABASE_URL  = 'https://mmallfxwgemjsshrzotl.supabase.co';
-const SUPABASE_KEY  = 'sb_publishable_pcHiT8cvoD2WqlVsAUC2-A_Ha2ihsHg';
+const SUPABASE_URL  = 'https://mmallgxwgemjsshrjzotl.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYWxsZnh3Z2VtanNzaHJ6b3RsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMTg3MzMsImV4cCI6MjA5MzY5NDczM30.FPbQ3fBOhD5Tr1QHL6uW1v-Nj84b9q50Kq8TECRp8gc';
 
 const _supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -1213,9 +1213,7 @@ document.addEventListener('click',e=>{
 });
 
 async function carregarPerfil(user){
-  console.log('[PERFIL] buscando perfil para:', user.id);
-  const {data,error}=await _supa.from('profiles').select('*').eq('id',user.id).single();
-  console.log('[PERFIL] resultado:', data, 'erro:', error);
+  const {data}=await _supa.from('profiles').select('*').eq('id',user.id).single();
   return data;
 }
 
@@ -1232,43 +1230,32 @@ function iniciarApp(user,profile){
 }
 
 // Listener de sessão
-// Controle para não inicializar duas vezes
-let _appIniciado = false;
-
 _supa.auth.onAuthStateChange(async(event,session)=>{
-  console.log('[AUTH] evento:', event, '| session:', !!session);
-  if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='INITIAL_SESSION') && session){
-    if(_appIniciado){console.log('[AUTH] já iniciado, ignorando');return;}
-    _appIniciado = true;
-    console.log('[AUTH] iniciando app para:', session.user.email);
+  if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'){
     showLoading('Carregando dados...');
     const profile=await carregarPerfil(session.user);
-    console.log('[AUTH] perfil:', profile);
-    hideLoading();
-    iniciarApp(session.user,profile);
-  } else if(event==='SIGNED_OUT'||(event==='INITIAL_SESSION'&&!session)){
-    _appIniciado = false;
+    hideLoading();iniciarApp(session.user,profile);
+  } else if(event==='SIGNED_OUT'){
     currentUser=null;currentProfile=null;
-    hideLoading();
-    console.log('[AUTH] sem sessão, mostrando login');
     document.getElementById('app-shell').style.display='none';
     document.getElementById('auth-screen').style.display='flex';
     tickets=[];atividades=[];
+    renderTickets();renderAtividades();
   }
 });
 
+// Verificar sessão ao abrir
+(async()=>{
+  showLoading('Verificando sessão...');
+  const {data:{session}}=await _supa.auth.getSession();
+  if(!session){hideLoading();document.getElementById('auth-screen').style.display='flex';}
+})();
+
 // ── SINCRONIZAÇÃO ──
 async function carregarDados(){
-  console.log('[DADOS] iniciando carregamento...');
   showLoading('Sincronizando...');
-  try{
-    await Promise.all([carregarTickets(),carregarAtividades()]);
-    console.log('[DADOS] carregado com sucesso');
-    hideLoading();toast('Dados carregados','success');
-  }catch(e){
-    console.error('[DADOS] erro:', e);
-    hideLoading();toast('Erro ao carregar dados: '+e.message,'error');
-  }
+  await Promise.all([carregarTickets(),carregarAtividades()]);
+  hideLoading();toast('Dados carregados','success');
 }
 
 // Tickets
