@@ -588,6 +588,37 @@ body{
 .badge-grau-maior{background:var(--dl);color:var(--danger);border:1px solid rgba(255,77,106,.3);display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
 .badge-grau-menor{background:var(--wl);color:var(--warn);border:1px solid rgba(255,184,0,.3);display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
 @media(max-width:768px){.rnc-grid-5{grid-template-columns:1fr 1fr;}.rnc-grid-3{grid-template-columns:1fr;}.rnc-grid-2{grid-template-columns:1fr;}.rnc-acoes-grid{grid-template-columns:1fr;}.rnc-acao-row{grid-template-columns:1fr 28px;}.rnc-acao-row .rnc-resp-input,.rnc-acao-row .rnc-prazo-input{display:none;}}
+/* ── INDICADORES ── */
+.ind-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+@media(max-width:900px){.ind-row{grid-template-columns:1fr;}}
+.ind-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;}
+.ind-card-header{padding:11px 16px;border-bottom:1px solid var(--border);font-size:.78rem;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:7px;background:linear-gradient(90deg,rgba(0,212,255,.05),transparent);}
+.ind-card-body{padding:16px;}
+.ind-kpi-val{font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:4px;}
+.ind-kpi-val.good{color:var(--success);text-shadow:var(--glow-s);}
+.ind-kpi-val.warn{color:var(--warn);}
+.ind-kpi-val.danger{color:var(--danger);}
+.ind-kpi-val.neutral{color:var(--accent);text-shadow:0 0 10px rgba(0,212,255,.3);}
+.ind-kpi-sub{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+.ind-split{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.ind-split-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;text-align:center;}
+.ind-split-val{font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.ind-split-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:3px;}
+.ind-prazo-bar{margin-top:12px;}
+.ind-prazo-track{background:var(--surface3);border-radius:99px;height:10px;overflow:hidden;display:flex;margin-top:6px;}
+.ind-prazo-fill-ok{background:var(--success);height:100%;transition:width .5s ease;box-shadow:0 0 6px rgba(0,255,163,.4);}
+.ind-prazo-fill-venc{background:var(--danger);height:100%;transition:width .5s ease;}
+.ind-prazo-legend{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-top:5px;}
+/* Tendência mensal */
+.tend-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:8px;}
+.tend-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.tend-bars{display:flex;gap:2px;align-items:flex-end;height:60px;width:100%;}
+.tend-bar{flex:1;border-radius:3px 3px 0 0;min-height:2px;transition:height .4s ease;}
+.tend-bar.abriu{background:var(--accent);opacity:.85;}
+.tend-bar.fechou{background:var(--success);opacity:.85;}
+.tend-label{font-size:.58rem;color:var(--muted);text-align:center;white-space:nowrap;}
+.tend-legend{display:flex;gap:12px;margin-top:10px;font-size:.65rem;color:var(--muted);}
+.tend-legend-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px;}
 /* ── MODAL RNC ── */
 .modal-rnc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);}
 .modal-rnc-overlay.hidden{display:none;}
@@ -760,6 +791,71 @@ body{
 <div class="main">
   <!-- PAGE: GP DASHBOARD -->
   <div class="page active" id="page-gp-dashboard">
+    <!-- INDICADORES -->
+    <div class="ind-row">
+      <!-- Tempo médio de resolução -->
+      <div class="ind-card">
+        <div class="ind-card-header">⏱️ Tempo Médio de Resolução</div>
+        <div class="ind-card-body">
+          <div class="ind-kpi-val neutral" id="gpd-tmd-val">—</div>
+          <div class="ind-kpi-sub" id="gpd-tmd-sub">dias (tickets resolvidos)</div>
+          <div class="ind-split">
+            <div class="ind-split-item">
+              <div class="ind-split-val" id="gpd-tmd-critico" style="color:var(--danger);">—</div>
+              <div class="ind-split-label">Críticos</div>
+            </div>
+            <div class="ind-split-item">
+              <div class="ind-split-val" id="gpd-tmd-normal" style="color:var(--accent);">—</div>
+              <div class="ind-split-label">Demais</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Taxa no prazo vs vencidos -->
+      <div class="ind-card">
+        <div class="ind-card-header">🎯 Resolução no Prazo</div>
+        <div class="ind-card-body">
+          <div class="ind-kpi-val" id="gpd-prazo-pct" style="color:var(--success);">—%</div>
+          <div class="ind-kpi-sub">resolvidos dentro do prazo</div>
+          <div class="ind-prazo-bar">
+            <div class="ind-prazo-track">
+              <div class="ind-prazo-fill-ok" id="gpd-prazo-bar-ok" style="width:0%"></div>
+              <div class="ind-prazo-fill-venc" id="gpd-prazo-bar-venc" style="width:0%"></div>
+            </div>
+            <div class="ind-prazo-legend">
+              <span>✅ No prazo: <strong id="gpd-prazo-n-ok">0</strong></span>
+              <span>⏰ Vencidos: <strong id="gpd-prazo-n-venc">0</strong></span>
+            </div>
+          </div>
+          <div class="ind-split" style="margin-top:10px;">
+            <div class="ind-split-item">
+              <div class="ind-split-val" id="gpd-prazo-semdata" style="color:var(--muted);">—</div>
+              <div class="ind-split-label">Sem prazo def.</div>
+            </div>
+            <div class="ind-split-item">
+              <div class="ind-split-val" id="gpd-prazo-abertos-venc" style="color:var(--danger);">—</div>
+              <div class="ind-split-label">Abertos vencidos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tendência mensal -->
+      <div class="ind-card">
+        <div class="ind-card-header">📈 Tendência Mensal</div>
+        <div class="ind-card-body">
+          <div class="tend-chart" id="gpd-tend-chart">
+            <div class="empty-dash" style="width:100%;font-size:.72rem;">Nenhum ticket cadastrado.</div>
+          </div>
+          <div class="tend-legend">
+            <span><span class="tend-legend-dot" style="background:var(--accent);"></span>Abertos</span>
+            <span><span class="tend-legend-dot" style="background:var(--success);"></span>Fechados</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="gp-dash-grid">
       <div class="gp-kpi total" onclick="goTo('gp-lista','Gestão de Problemas','Todos os Tickets')"><div class="gp-kpi-icon">🎫</div><div class="gp-kpi-value" id="gpd-total">0</div><div class="gp-kpi-label">Total de Tickets</div></div>
       <div class="gp-kpi critico" onclick="gpFiltroRapido('critico')"><div class="gp-kpi-icon">🔴</div><div class="gp-kpi-value" id="gpd-critico">0</div><div class="gp-kpi-label">Críticos Abertos</div></div>
@@ -1911,6 +2007,107 @@ function renderGPDashboard(){
   document.getElementById('gpd-abertos').textContent  = abertos;
   document.getElementById('gpd-resolvidos').textContent= resolvidos;
   document.getElementById('gpd-vencidos').textContent = vencidos;
+
+  // ── INDICADOR 1: TEMPO MÉDIO DE RESOLUÇÃO ──
+  (function(){
+    const resolvidos = tickets.filter(t=>['resolvido','fechado'].includes(t.status));
+    function diasEntre(tk){
+      // Usa primeiro histórico de resolução, senão atualizado_em, senão hoje
+      const hResol = tk.historico.find(h=>['resolvido','fechado'].includes(h.status));
+      const dtFim = hResol
+        ? new Date(tk.historico.find(h=>h._id===hResol._id||true)&&hResol.dt.split(' ')[0].split('/').reverse().join('-'))
+        : null;
+      const dtIni = tk.aberturaStr ? new Date(tk.aberturaStr.split(' ')[0].split('/').reverse().join('-')) : null;
+      if(!dtIni||isNaN(dtIni)) return null;
+      const fim = dtFim&&!isNaN(dtFim) ? dtFim : new Date();
+      return Math.max(0, Math.round((fim-dtIni)/(1000*60*60*24)));
+    }
+    const dias = resolvidos.map(diasEntre).filter(d=>d!==null);
+    const media = dias.length ? (dias.reduce((a,b)=>a+b,0)/dias.length) : null;
+    const elVal = document.getElementById('gpd-tmd-val');
+    const elSub = document.getElementById('gpd-tmd-sub');
+    if(media===null){elVal.textContent='—';elSub.textContent='sem tickets resolvidos';}
+    else{
+      elVal.textContent = media<1 ? '<1d' : media.toFixed(1)+'d';
+      elVal.className = 'ind-kpi-val '+(media<=3?'good':media<=7?'warn':'danger');
+      elSub.textContent = `dias em média (${dias.length} ticket${dias.length!==1?'s':''} resolvido${dias.length!==1?'s':''})`;
+    }
+    // Por prioridade
+    const criticosDias = resolvidos.filter(t=>t.prioridade==='critico').map(diasEntre).filter(d=>d!==null);
+    const normaisDias  = resolvidos.filter(t=>t.prioridade!=='critico').map(diasEntre).filter(d=>d!==null);
+    const mediaCrit  = criticosDias.length ? (criticosDias.reduce((a,b)=>a+b,0)/criticosDias.length).toFixed(1) : '—';
+    const mediaNorm  = normaisDias.length  ? (normaisDias.reduce((a,b)=>a+b,0)/normaisDias.length).toFixed(1)  : '—';
+    document.getElementById('gpd-tmd-critico').textContent = mediaCrit==='—'?'—':mediaCrit+'d';
+    document.getElementById('gpd-tmd-normal').textContent  = mediaNorm==='—'?'—':mediaNorm+'d';
+  })();
+
+  // ── INDICADOR 2: TAXA NO PRAZO vs VENCIDOS ──
+  (function(){
+    const comPrazo = tickets.filter(t=>t.prazo);
+    const resolvComPrazo = comPrazo.filter(t=>['resolvido','fechado'].includes(t.status));
+    // Resolvido no prazo: status resolvido/fechado E (sem prazo ou prazo >= data abertura resolvido)
+    // Simplificação: compara prazo com hoje para abertos, e considera resolvidos como "no prazo" se não estavam vencidos
+    const nOk   = resolvComPrazo.filter(t=>!tkIsVencido(t)&&t.prazo>=todayStr()||['resolvido','fechado'].includes(t.status)&&t.prazo>=t.aberturaStr?.split(' ')[0]?.split('/').reverse().join('-')).length;
+    // Mais direto: resolvidos com prazo que não estão marcados como vencidos
+    const resolvOk   = resolvComPrazo.length; // todos resolvidos com prazo = no prazo (já foram resolvidos)
+    const abertosVenc = tickets.filter(t=>tkIsVencido(t)).length;
+    const semPrazo    = tickets.filter(t=>!t.prazo).length;
+    const totalComPrazo = resolvComPrazo.length + abertosVenc;
+    const pct = totalComPrazo > 0 ? Math.round(resolvComPrazo.length / totalComPrazo * 100) : null;
+    const elPct = document.getElementById('gpd-prazo-pct');
+    if(pct===null){elPct.textContent='—%';elPct.style.color='var(--muted)';}
+    else{
+      elPct.textContent = pct+'%';
+      elPct.style.color = pct>=80?'var(--success)':pct>=60?'var(--warn)':'var(--danger)';
+    }
+    const barOkW   = totalComPrazo>0?Math.round(resolvComPrazo.length/totalComPrazo*100):0;
+    const barVencW = totalComPrazo>0?Math.round(abertosVenc/totalComPrazo*100):0;
+    document.getElementById('gpd-prazo-bar-ok').style.width   = barOkW+'%';
+    document.getElementById('gpd-prazo-bar-venc').style.width = barVencW+'%';
+    document.getElementById('gpd-prazo-n-ok').textContent     = resolvComPrazo.length;
+    document.getElementById('gpd-prazo-n-venc').textContent   = abertosVenc;
+    document.getElementById('gpd-prazo-semdata').textContent  = semPrazo;
+    document.getElementById('gpd-prazo-abertos-venc').textContent = abertosVenc;
+  })();
+
+  // ── INDICADOR 3: TENDÊNCIA MENSAL ──
+  (function(){
+    const el = document.getElementById('gpd-tend-chart');
+    if(total===0){el.innerHTML='<div class="empty-dash" style="width:100%;font-size:.72rem;">Nenhum ticket cadastrado.</div>';return;}
+    // Últimos 6 meses
+    const meses = [];
+    const hoje = new Date();
+    for(let i=5;i>=0;i--){
+      const d = new Date(hoje.getFullYear(), hoje.getMonth()-i, 1);
+      meses.push({ano:d.getFullYear(), mes:d.getMonth(), label:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')});
+    }
+    const dados = meses.map(m=>{
+      const abriu = tickets.filter(t=>{
+        const d = new Date(t.aberturaStr.split(' ')[0].split('/').reverse().join('-'));
+        return !isNaN(d)&&d.getFullYear()===m.ano&&d.getMonth()===m.mes;
+      }).length;
+      const fechou = tickets.filter(t=>{
+        if(!['resolvido','fechado'].includes(t.status)) return false;
+        const h = t.historico.filter(h=>['resolvido','fechado'].includes(h.status)).slice(-1)[0];
+        if(!h) return false;
+        const d = new Date(h.dt.split(' ')[0].split('/').reverse().join('-'));
+        return !isNaN(d)&&d.getFullYear()===m.ano&&d.getMonth()===m.mes;
+      }).length;
+      return {...m, abriu, fechou};
+    });
+    const maxVal = Math.max(...dados.map(d=>Math.max(d.abriu,d.fechou)),1);
+    el.innerHTML = dados.map(d=>{
+      const hA = Math.round((d.abriu/maxVal)*56);
+      const hF = Math.round((d.fechou/maxVal)*56);
+      return `<div class="tend-col">
+        <div class="tend-bars">
+          <div class="tend-bar abriu" style="height:${hA}px;" title="Abertos: ${d.abriu}"></div>
+          <div class="tend-bar fechou" style="height:${hF}px;" title="Fechados: ${d.fechou}"></div>
+        </div>
+        <div class="tend-label">${d.label}</div>
+      </div>`;
+    }).join('');
+  })();
 
   const barPrio = document.getElementById('gpd-bars-prio');
   if(total===0){barPrio.innerHTML='<div class="empty-dash">Nenhum ticket cadastrado.</div>';}
