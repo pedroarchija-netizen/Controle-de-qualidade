@@ -928,7 +928,6 @@ body{
       </div>
     </div>
   </div>
-  </div>
   <!-- PAGE: NC NOVO -->
   <div class="page" id="page-nc-novo">
     <div class="rnc-form-card">
@@ -1145,7 +1144,6 @@ body{
     </div>
     <div id="rnc-list"><div class="empty-state"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>Nenhum RNC registrado ainda.</p></div></div>
   </div>
-  </div>
 
 </div>
 
@@ -1259,28 +1257,21 @@ function mostrarLogin(){
 }
 
 async function carregarPerfil(user){
-  return new Promise(async(resolve)=>{
-    const timer = setTimeout(()=>{
-      const nomeFromMeta = user.user_metadata?.nome||null;
-      resolve({id:user.id,nome:nomeFromMeta||user.email,email:user.email,perfil:'operador',_timeout:true});
-    }, 20000);
+  const fallback = {id:user.id, nome:user.user_metadata?.nome||user.email, email:user.email, perfil:'operador'};
+  const timeoutPromise = new Promise(resolve=>setTimeout(()=>resolve({...fallback,_timeout:true}),20000));
+  const fetchPromise = (async()=>{
     try{
       const {data,error} = await _supa.from('profiles').select('*').eq('id',user.id).maybeSingle();
-      clearTimeout(timer);
       if(data){
-        // Garantir que nome nunca seja vazio — fallback para metadata depois email
         if(!data.nome) data.nome = user.user_metadata?.nome||user.email;
-        resolve(data);
-      } else {
-        const nomeFromMeta = user.user_metadata?.nome||null;
-        resolve({id:user.id,nome:nomeFromMeta||user.email,email:user.email,perfil:'operador'});
+        return data;
       }
+      return fallback;
     }catch(e){
-      clearTimeout(timer);
-      const nomeFromMeta = user.user_metadata?.nome||null;
-      resolve({id:user.id,nome:nomeFromMeta||user.email,email:user.email,perfil:'operador'});
+      return fallback;
     }
-  });
+  })();
+  return Promise.race([fetchPromise, timeoutPromise]);
 }
 
 _supa.auth.onAuthStateChange(async(event,session)=>{
@@ -1582,7 +1573,13 @@ function previewImgAbertura(input){
 function renderPreviewAbertura(){
   const g=document.getElementById('tf-img-preview');g.innerHTML='';
   tfImgsBuffer.forEach((img,i)=>{
-    g.innerHTML+=`<div class="img-prev-item" onclick="abrirLightbox('${img.src}')"><img src="${img.src}" alt="${img.name}"/><button class="img-prev-del" onclick="event.stopPropagation();tfImgsBuffer.splice(${i},1);renderPreviewAbertura()">×</button></div>`;
+    const div=document.createElement('div');
+    div.className='img-prev-item';
+    div.addEventListener('click',()=>abrirLightbox(img.src));
+    const im=document.createElement('img');im.src=img.src;im.alt=img.name;
+    const btn=document.createElement('button');btn.className='img-prev-del';btn.textContent='×';
+    btn.addEventListener('click',e=>{e.stopPropagation();tfImgsBuffer.splice(i,1);renderPreviewAbertura();});
+    div.appendChild(im);div.appendChild(btn);g.appendChild(div);
   });
 }
 function previewImgResolucao(input){
@@ -1598,7 +1595,13 @@ function previewImgResolucao(input){
 function renderPreviewResolucao(){
   const g=document.getElementById('upd-img-preview');g.innerHTML='';
   updImgsBuffer.forEach((img,i)=>{
-    g.innerHTML+=`<div class="img-prev-item" onclick="abrirLightbox('${img.src}')"><img src="${img.src}" alt="${img.name}"/><button class="img-prev-del" onclick="event.stopPropagation();updImgsBuffer.splice(${i},1);renderPreviewResolucao()">×</button></div>`;
+    const div=document.createElement('div');
+    div.className='img-prev-item';
+    div.addEventListener('click',()=>abrirLightbox(img.src));
+    const im=document.createElement('img');im.src=img.src;im.alt=img.name;
+    const btn=document.createElement('button');btn.className='img-prev-del';btn.textContent='×';
+    btn.addEventListener('click',e=>{e.stopPropagation();updImgsBuffer.splice(i,1);renderPreviewResolucao();});
+    div.appendChild(im);div.appendChild(btn);g.appendChild(div);
   });
 }
 function abrirLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.remove('hidden');}
@@ -1774,15 +1777,20 @@ async function atualizarTicket(){
   const statusFinal = novoStatus||t.status;
   const acao = novoStatus ? `Status alterado para "${statusLabel[novoStatus]}"` : 'Registro de ação';
   showLoading('Salvando atualização...');
-  const imgsSalvas = await salvarHistorico(t.id, {acao, nota:nota||'—', status:statusFinal, novoStatus}, updImgsBuffer);
-  hideLoading();
-  if(imgsSalvas===false){return;}
-  // Histórico e status já foram atualizados pelo optimistic update em salvarHistorico
-  updImgsBuffer=[];
-  toast('Atualização registrada!','success');
-  atualizarGPBadge();
-  abrirModal(tkModalId);
-  renderTickets();
+  try{
+    const imgsSalvas = await salvarHistorico(t.id, {acao, nota:nota||'—', status:statusFinal, novoStatus}, updImgsBuffer);
+    hideLoading();
+    updImgsBuffer=[];
+    toast('Atualização registrada!','success');
+    atualizarGPBadge();
+    // Só reabre o modal se o Realtime ainda não o atualizou
+    const currentId = tkModalId;
+    setTimeout(()=>{if(tkModalId===currentId) abrirModal(currentId);},150);
+    renderTickets();
+  }catch(e){
+    hideLoading();
+    toast('Erro ao salvar atualização: '+e.message,'error');
+  }
 }
 
 function fecharModal(){
@@ -1798,7 +1806,6 @@ document.addEventListener('keydown',function(e){
   }
 });
 
-function podeEditar(){return ['admin','supervisor'].includes(currentProfile?.perfil);}
 function podeExcluir(){return currentProfile?.perfil==='admin';}
 
 async function excluirTicket(id){
@@ -1879,9 +1886,10 @@ function iniciarFormRNC(){
   // Número automático
   const numEl = document.getElementById('rnc-numero');
   if(numEl && !numEl.value){
-    const seq = String(rncs.length+1).padStart(4,'0');
     const ano = new Date().getFullYear();
-    numEl.value = `RNC-${ano}-${seq}`;
+    const seq = String(rncs.length+1).padStart(4,'0');
+    const ts  = Date.now().toString(36).toUpperCase().slice(-3); // sufixo anti-colisão
+    numEl.value = `RNC-${ano}-${seq}-${ts}`;
   }
   // Popular selects de usuários
   const selLider = document.getElementById('rnc-lider-nome');
@@ -1982,7 +1990,7 @@ async function salvarRNC(){
   hideLoading();
   if(error){toast('Erro ao salvar: '+error.message,'error');return;}
   toast('RNC '+d.numero+' salva com sucesso!','success');
-  await carregarRNCs();
+  // Realtime cuida de adicionar à lista via _handleRealtimeRNC
   atualizarNCBadge();
   goTo('nc-lista','Não Conformidade','Registros');
 }
@@ -2080,12 +2088,12 @@ async function excluirRNC(id){
 
 function limparFormRNC(){
   if(!confirm('Limpar o formulário?'))return;
-  ['rnc-processo','rnc-norma','rnc-descricao','rnc-p1','rnc-p2','rnc-p3','rnc-p4','rnc-p5','rnc-causa-raiz','rnc-evidencia','rnc-colab-nome','rnc-data-verif','rnc-data-encerramento'].forEach(id=>document.getElementById(id).value='');
+  ['rnc-numero','rnc-data','rnc-processo','rnc-norma','rnc-descricao','rnc-p1','rnc-p2','rnc-p3','rnc-p4','rnc-p5','rnc-causa-raiz','rnc-evidencia','rnc-colab-nome','rnc-data-verif','rnc-data-encerramento'].forEach(id=>document.getElementById(id).value='');
   ['rnc-setor','rnc-grau','rnc-tipo','rnc-status-verif','rnc-lider-nome','rnc-resp-encerramento'].forEach(id=>document.getElementById(id).selectedIndex=0);
   document.getElementById('rnc-status-final').selectedIndex=0;
   document.getElementById('rnc-contencoes').innerHTML=`<div class="rnc-acao-row"><input type="text" class="rnc-acao-input" placeholder="Descreva a ação de contenção"/><input type="text" class="rnc-resp-input" placeholder="Responsável"/><input type="date" class="rnc-prazo-input"/><button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button></div>`;
   document.getElementById('rnc-corretivas').innerHTML=`<div class="rnc-acao-row rnc-acao-row-corr"><input type="text" class="rnc-acao-input" placeholder="Descreva a ação corretiva"/><input type="date" class="rnc-prazo-input"/><button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button></div>`;
-  iniciarFormRNC();
+  iniciarFormRNC(); // repopula data e número automático após limpar
 }
 
 // ── GERAÇÃO DO DOCX ──
