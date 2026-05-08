@@ -1935,9 +1935,9 @@ async function salvarAvaliacao5S(){
   const pct  = Math.round(soma/totalMax*100);
   const obs  = document.getElementById('obs').value.trim();
   const payload = {
-    setor, data_avaliacao:data, avaliador,
+    setor, data:data, avaliador,
     notas:JSON.stringify(notas),
-    pontuacao:soma, percentual:pct, observacoes:obs||null,
+    score:soma, percentual:pct, observacoes:obs||null,
     user_id:currentUser.id
   };
   showLoading('Salvando avaliação...');
