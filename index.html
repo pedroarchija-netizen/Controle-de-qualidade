@@ -1384,7 +1384,10 @@ function _handleRealtimeTicket(p){
     if(idx>=0){
       tickets[idx]={...tickets[idx],..._mapTicketPartial(p.new)};
       atualizarGPBadge();renderTickets();
-      if(tkModalId===p.new.id) abrirModal(p.new.id);
+      // Só atualiza o header do modal — não re-abre (evita piscar e perder estado)
+      if(tkModalId===p.new.id){
+        document.getElementById('mi-status').innerHTML=`<span class="st-badge ${statusClass[p.new.status]}">${statusLabel[p.new.status]}</span>`;
+      }
     }
   } else if(p.eventType==='DELETE'){
     tickets=tickets.filter(t=>t.id!==p.old.id);
@@ -1398,10 +1401,15 @@ function _handleRealtimeHistorico(p){
     const t=tickets.find(x=>x.id===p.new.ticket_id);
     if(t){
       const h=_mapHistorico(p.new);
-      if(!t.historico.find(x=>x._id===p.new.id)){
+      // Substituir entrada temporária (optimistic) pelo registro real do banco
+      const tempIdx = t.historico.findIndex(x=>typeof x._id==='string'&&x._id.startsWith('tmp_')&&x.acao===h.acao&&x.usuario===h.usuario);
+      if(tempIdx>=0){
+        t.historico[tempIdx] = h; // substitui o temp pelo real
+      } else if(!t.historico.find(x=>x._id===p.new.id)){
         t.historico.push(h);
-        if(tkModalId===t.id) abrirModal(t.id);
       }
+      // Atualiza só o histórico no modal se estiver aberto, sem re-renderizar tudo
+      if(tkModalId===t.id) renderHistorico(t);
     }
   }
 }
@@ -1479,21 +1487,18 @@ async function salvarHistorico(ticketId,entry,novasImagens){
   return imgsSalvas;
 }
 
-// Upload imagens Storage
-async function uploadImagens(imgs,pasta){
-  const salvas=[];
-  for(const img of imgs){
-    if(img.src&&img.src.startsWith('data:')){
-      const path=`${pasta}/${Date.now()}_${img.name}`;
-      const blob=dataURLtoBlob(img.src);
-      const {error}=await _supa.storage.from('ticket-imagens').upload(path,blob,{contentType:blob.type});
-      if(!error){
-        const {data:u}=_supa.storage.from('ticket-imagens').getPublicUrl(path);
-        salvas.push({name:img.name,src:u.publicUrl,path});
-      }
-    } else salvas.push(img);
-  }
-  return salvas;
+// Upload imagens Storage — paralelo
+async function uploadImagens(imgs, pasta){
+  const uploads = imgs.map(async img => {
+    if(!img.src || !img.src.startsWith('data:')) return img;
+    const path = `${pasta}/${Date.now()}_${Math.random().toString(36).slice(2)}_${img.name}`;
+    const blob = dataURLtoBlob(img.src);
+    const {error} = await _supa.storage.from('ticket-imagens').upload(path, blob, {contentType:blob.type});
+    if(error) return null;
+    const {data:u} = _supa.storage.from('ticket-imagens').getPublicUrl(path);
+    return {name:img.name, src:u.publicUrl, path};
+  });
+  return (await Promise.all(uploads)).filter(Boolean);
 }
 
 function dataURLtoBlob(dataUrl){
@@ -1798,20 +1803,55 @@ async function atualizarTicket(){
   if(!novoStatus&&!nota&&updImgsBuffer.length===0){alert('Informe um novo status, registre uma ação ou adicione imagens.');return;}
   const statusFinal = novoStatus||t.status;
   const acao = novoStatus ? `Status alterado para "${statusLabel[novoStatus]}"` : 'Registro de ação';
-  showLoading('Salvando atualização...');
+  const imgsParaUpload = [...updImgsBuffer];
+
+  // 1. Optimistic update IMEDIATO — UI responde na hora
+  const entradaTemp = {_id:'tmp_'+Date.now(), dt:nowStr(), usuario:currentProfile?.nome||currentUser.email, acao, nota:nota||'—', status:statusFinal, imagens:[]};
+  if(novoStatus) t.status = novoStatus;
+  t.historico.push(entradaTemp);
+  updImgsBuffer = [];
+  document.getElementById('upd-status').value = '';
+  document.getElementById('upd-nota').value   = '';
+  document.getElementById('upd-img-preview').innerHTML = '';
+  renderHistorico(t);
+  renderTickets();
+  atualizarGPBadge();
+  toast('Atualização registrada!','success');
+
+  // 2. Persiste em background — sem bloquear a UI
   try{
-    const imgsSalvas = await salvarHistorico(t.id, {acao, nota:nota||'—', status:statusFinal, novoStatus}, updImgsBuffer);
-    hideLoading();
-    updImgsBuffer=[];
-    toast('Atualização registrada!','success');
-    atualizarGPBadge();
-    // Só reabre o modal se o Realtime ainda não o atualizou
-    const currentId = tkModalId;
-    setTimeout(()=>{if(tkModalId===currentId) abrirModal(currentId);},150);
-    renderTickets();
+    // Upload paralelo de imagens
+    const imgsSalvas = imgsParaUpload.length > 0
+      ? await uploadImagens(imgsParaUpload, `tickets/${t.id}`)
+      : [];
+
+    // Atualiza entrada temporária com as imagens reais
+    entradaTemp.imagens = imgsSalvas;
+    if(imgsSalvas.length > 0) renderHistorico(t);
+
+    // Salva no banco — verifica erros explicitamente
+    const [resHist, resTk] = await Promise.all([
+      _supa.from('ticket_historico').insert({
+        ticket_id:t.id, usuario:currentProfile?.nome||currentUser.email,
+        user_id:currentUser.id, acao, nota:nota||'—',
+        status:statusFinal, imagens:imgsSalvas
+      }),
+      novoStatus
+        ? _supa.from('tickets').update({status:novoStatus, atualizado_em:new Date().toISOString()}).eq('id',t.id)
+        : Promise.resolve({error:null})
+    ]);
+
+    if(resHist.error) throw new Error(resHist.error.message);
+    if(resTk?.error) throw new Error(resTk.error.message);
+
   }catch(e){
-    hideLoading();
-    toast('Erro ao salvar atualização: '+e.message,'error');
+    // Rollback: remove entrada temporária e reverte status
+    t.historico = t.historico.filter(h=>h._id!==entradaTemp._id);
+    if(novoStatus) t.status = statusFinal === novoStatus ? (t.historico.at(-1)?.status || 'aberto') : t.status;
+    renderHistorico(t);
+    renderTickets();
+    atualizarGPBadge();
+    toast('Erro ao salvar: '+e.message,'error');
   }
 }
 
