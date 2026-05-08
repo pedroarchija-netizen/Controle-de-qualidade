@@ -588,6 +588,28 @@ body{
 .badge-grau-maior{background:var(--dl);color:var(--danger);border:1px solid rgba(255,77,106,.3);display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
 .badge-grau-menor{background:var(--wl);color:var(--warn);border:1px solid rgba(255,184,0,.3);display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
 @media(max-width:768px){.rnc-grid-5{grid-template-columns:1fr 1fr;}.rnc-grid-3{grid-template-columns:1fr;}.rnc-grid-2{grid-template-columns:1fr;}.rnc-acoes-grid{grid-template-columns:1fr;}.rnc-acao-row{grid-template-columns:1fr 28px;}.rnc-acao-row .rnc-resp-input,.rnc-acao-row .rnc-prazo-input{display:none;}}
+/* ── MODAL RNC ── */
+.modal-rnc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);}
+.modal-rnc-overlay.hidden{display:none;}
+.modal-rnc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);width:100%;max-width:720px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);position:relative;}
+.modal-rnc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--warn),transparent);opacity:.6;}
+.modal-rnc-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
+.modal-rnc-header h3{font-size:.95rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
+.modal-rnc-num{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);background:var(--surface3);border:1px solid var(--border);padding:2px 8px;border-radius:var(--rs);}
+.modal-rnc-body{padding:20px;}
+.modal-rnc-section{margin-bottom:20px;}
+.modal-rnc-section-title{font-size:.65rem;font-weight:700;color:var(--warn);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.modal-rnc-section-title::after{content:'';flex:1;height:1px;background:rgba(255,184,0,.2);}
+.modal-rnc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-rnc-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.modal-rnc-group{display:flex;flex-direction:column;gap:5px;}
+.modal-rnc-group label{font-size:.62rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+.modal-rnc-group input,.modal-rnc-group select,.modal-rnc-group textarea{width:100%;background:var(--surface3);border:1px solid var(--border2);border-radius:var(--rs);padding:9px 12px;font-size:.84rem;font-family:'Space Grotesk',sans-serif;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+.modal-rnc-group input:focus,.modal-rnc-group select:focus,.modal-rnc-group textarea:focus{border-color:var(--warn);box-shadow:0 0 0 3px rgba(255,184,0,.1);}
+.modal-rnc-group select option{background:var(--surface3);}
+.modal-rnc-group textarea{resize:vertical;min-height:70px;}
+.modal-rnc-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:var(--surface2);position:sticky;bottom:0;}
+@media(max-width:600px){.modal-rnc-grid-2{grid-template-columns:1fr;}.modal-rnc-grid-3{grid-template-columns:1fr;}}
 @media print{
   .sb,.topbar,.actions,.nota-btns,.upload-zone,.foto-del,.escala-toolbar,.filter-group,.ativ-del,body{background:#fff!important;color:#111!important;}
   .main{margin-left:0;padding-top:0;}
@@ -1798,10 +1820,14 @@ function fecharModal(){
   tkModalId = null;
 }
 
-document.getElementById('modal-ticket').addEventListener('click',function(e){if(e.target===this)fecharModal();});
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('modal-ticket').addEventListener('click',function(e){if(e.target===this)fecharModal();});
+  document.getElementById('modal-rnc-edit').addEventListener('click',function(e){if(e.target===this)fecharModalRNC();});
+});
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     if(!document.getElementById('lightbox').classList.contains('hidden')){fecharLightbox();return;}
+    if(!document.getElementById('modal-rnc-edit').classList.contains('hidden')){fecharModalRNC();return;}
     if(!document.getElementById('modal-ticket').classList.contains('hidden')){fecharModal();return;}
   }
 });
@@ -2065,6 +2091,7 @@ function renderRNCs(){
       <div class="rnc-card-footer">
         <div style="font-size:.7rem;color:var(--muted2);">${esc(r.norma||'Sem norma referenciada')}</div>
         <div class="tk-actions">
+          <button class="tk-btn" onclick="abrirModalRNC('${r.id}')">✏️ Editar</button>
           <button class="tk-btn" onclick="gerarDocxRNCById('${r.id}')">📄 Documento</button>
           ${podeExcluir()?`<button class="tk-btn danger" onclick="excluirRNC('${r.id}')">✕ Excluir</button>`:''}
         </div>
@@ -2096,6 +2123,159 @@ function limparFormRNC(){
   iniciarFormRNC(); // repopula data e número automático após limpar
 }
 
+// ── MODAL EDITAR RNC ──
+let _rncEditId = null;
+
+function abrirModalRNC(id){
+  const r = rncs.find(x=>x.id===id);
+  if(!r) return;
+  _rncEditId = id;
+
+  document.getElementById('mrnc-numero-display').textContent = r.numero||'—';
+  document.getElementById('mrnc-status').value             = r.status||'Em Aberto';
+  document.getElementById('mrnc-causa-raiz').value         = r.causa_raiz||'';
+  document.getElementById('mrnc-data-verif').value         = r.data_verif||'';
+  document.getElementById('mrnc-evidencia').value          = r.evidencia||'';
+  document.getElementById('mrnc-status-verif').value       = r.status_verif||'';
+  document.getElementById('mrnc-colab-nome').value         = r.colab_nome||'';
+  document.getElementById('mrnc-data-encerramento').value  = r.data_encerramento||'';
+
+  // Porquês
+  const pw = document.getElementById('mrnc-porques-wrap');
+  pw.innerHTML = '';
+  ['p1','p2','p3','p4','p5'].forEach((k,i)=>{
+    const row = document.createElement('div');
+    row.className = 'porque-row';
+    row.innerHTML = `<span class="porque-num">${i+1}°</span><input type="text" id="mrnc-${k}" value="${esc(r[k]||'')}" placeholder="Porquê ${i+1}..."/>`;
+    pw.appendChild(row);
+  });
+
+  // Popular selects de usuários
+  const selLider = document.getElementById('mrnc-lider-nome');
+  const selEnc   = document.getElementById('mrnc-resp-encerramento');
+  selLider.innerHTML = '<option value="">Selecione o líder...</option>';
+  selEnc.innerHTML   = '<option value="">Selecione...</option>';
+  usuariosCadastrados.forEach(u=>{
+    const nm = esc(u.nome||u.email);
+    selLider.innerHTML += `<option value="${nm}">${nm}${u.perfil?' — '+u.perfil:''}</option>`;
+    selEnc.innerHTML   += `<option value="${nm}">${nm}</option>`;
+  });
+  selLider.value = r.lider_nome||'';
+  selEnc.value   = r.resp_encerramento||'';
+
+  // Ações de contenção
+  const contWrap = document.getElementById('mrnc-contencoes');
+  contWrap.innerHTML = '';
+  const conts = _parseJson(r.contencoes);
+  (conts.length > 0 ? conts : [{acao:'',responsavel:'',prazo:''}]).forEach(a=>{
+    contWrap.appendChild(_criarRowContencao(a.acao||'', a.responsavel||'', a.prazo||''));
+  });
+
+  // Ações corretivas
+  const corrWrap = document.getElementById('mrnc-corretivas');
+  corrWrap.innerHTML = '';
+  const corrs = _parseJson(r.corretivas);
+  (corrs.length > 0 ? corrs : [{acao:'',prazo:''}]).forEach(a=>{
+    corrWrap.appendChild(_criarRowCorretiva(a.acao||'', a.prazo||''));
+  });
+
+  document.getElementById('modal-rnc-edit').classList.remove('hidden');
+}
+
+function fecharModalRNC(){
+  document.getElementById('modal-rnc-edit').classList.add('hidden');
+  _rncEditId = null;
+}
+
+function _parseJson(val){
+  if(!val) return [];
+  try{ return typeof val==='string'?JSON.parse(val):val; }catch(e){ return []; }
+}
+
+function _criarRowContencao(acao='', responsavel='', prazo=''){
+  const row = document.createElement('div');
+  row.className = 'rnc-acao-row';
+  row.innerHTML = `<input type="text" class="rnc-acao-input" placeholder="Ação de contenção" value="${esc(acao)}"/>
+    <input type="text" class="rnc-resp-input" placeholder="Responsável" value="${esc(responsavel)}"/>
+    <input type="date" class="rnc-prazo-input" value="${esc(prazo)}"/>
+    <button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button>`;
+  return row;
+}
+
+function _criarRowCorretiva(acao='', prazo=''){
+  const row = document.createElement('div');
+  row.className = 'rnc-acao-row rnc-acao-row-corr';
+  row.innerHTML = `<input type="text" class="rnc-acao-input" placeholder="Ação corretiva" value="${esc(acao)}"/>
+    <input type="date" class="rnc-prazo-input" value="${esc(prazo)}"/>
+    <button class="rnc-row-del" onclick="removerAcaoRow(this)">×</button>`;
+  return row;
+}
+
+function mRncAdicionarContencao(){
+  document.getElementById('mrnc-contencoes').appendChild(_criarRowContencao());
+}
+
+function mRncAdicionarCorretiva(){
+  document.getElementById('mrnc-corretivas').appendChild(_criarRowCorretiva());
+}
+
+function _lerAcoesModal(containerId){
+  return Array.from(document.querySelectorAll(`#${containerId} .rnc-acao-row`)).map(row=>{
+    const inputs = row.querySelectorAll('input');
+    if(containerId==='mrnc-contencoes')
+      return {acao:inputs[0]?.value||'', responsavel:inputs[1]?.value||'', prazo:inputs[2]?.value||''};
+    return {acao:inputs[0]?.value||'', prazo:inputs[1]?.value||''};
+  }).filter(a=>a.acao.trim());
+}
+
+async function salvarEdicaoRNC(){
+  if(!_rncEditId) return;
+  const status = document.getElementById('mrnc-status').value;
+
+  // Se Encerrada, data de encerramento é obrigatória
+  const dataEnc = document.getElementById('mrnc-data-encerramento').value;
+  if(status==='Encerrada' && !dataEnc){
+    toast('Informe a data de encerramento para encerrar a RNC.','error');
+    return;
+  }
+
+  const payload = {
+    status,
+    causa_raiz:        document.getElementById('mrnc-causa-raiz').value.trim()||null,
+    p1:                document.getElementById('mrnc-p1').value.trim()||null,
+    p2:                document.getElementById('mrnc-p2').value.trim()||null,
+    p3:                document.getElementById('mrnc-p3').value.trim()||null,
+    p4:                document.getElementById('mrnc-p4').value.trim()||null,
+    p5:                document.getElementById('mrnc-p5').value.trim()||null,
+    contencoes:        JSON.stringify(_lerAcoesModal('mrnc-contencoes')),
+    corretivas:        JSON.stringify(_lerAcoesModal('mrnc-corretivas')),
+    data_verif:        document.getElementById('mrnc-data-verif').value||null,
+    evidencia:         document.getElementById('mrnc-evidencia').value.trim()||null,
+    status_verif:      document.getElementById('mrnc-status-verif').value||null,
+    colab_nome:        document.getElementById('mrnc-colab-nome').value.trim()||null,
+    lider_nome:        document.getElementById('mrnc-lider-nome').value||null,
+    resp_encerramento: document.getElementById('mrnc-resp-encerramento').value||null,
+    data_encerramento: dataEnc||null,
+  };
+
+  showLoading('Salvando...');
+  const {data, error} = await _supa.from('nao_conformidades').update(payload).eq('id',_rncEditId).select().single();
+  hideLoading();
+
+  if(error){ toast('Erro ao salvar: '+error.message,'error'); return; }
+
+  // Atualiza local (Realtime fará o mesmo via UPDATE, mas adiantamos)
+  const idx = rncs.findIndex(r=>r.id===_rncEditId);
+  if(idx>=0) rncs[idx] = {...rncs[idx], ...payload};
+
+  toast('RNC atualizada com sucesso!','success');
+  fecharModalRNC();
+  atualizarNCBadge();
+  renderRNCs();
+}
+
+// Fechar modal RNC com Escape (já tratado no listener global de Escape,
+// mas precisamos incluir a verificação aqui)
 // ── GERAÇÃO DO DOCX ──
 function fmtDataDocx(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
 
@@ -2249,6 +2429,112 @@ async function _gerarDocxComDados(d){
 
 // app iniciado via onAuthStateChange
 </script>
+
+<!-- MODAL EDITAR RNC -->
+<div class="modal-rnc-overlay hidden" id="modal-rnc-edit">
+  <div class="modal-rnc">
+    <div class="modal-rnc-header">
+      <h3>⚠️ Editar RNC <span class="modal-rnc-num" id="mrnc-numero-display">—</span></h3>
+      <button class="modal-close" onclick="fecharModalRNC()">×</button>
+    </div>
+    <div class="modal-rnc-body">
+
+      <!-- Status -->
+      <div class="modal-rnc-section">
+        <div class="modal-rnc-section-title">Status &amp; Encerramento</div>
+        <div class="modal-rnc-grid-3">
+          <div class="modal-rnc-group">
+            <label>Status</label>
+            <select id="mrnc-status">
+              <option value="Em Aberto">🔵 Em Aberto</option>
+              <option value="Em Análise">🟣 Em Análise</option>
+              <option value="Em Execução">🟡 Em Execução</option>
+              <option value="Encerrada">✅ Encerrada</option>
+            </select>
+          </div>
+          <div class="modal-rnc-group">
+            <label>Responsável pelo Encerramento</label>
+            <select id="mrnc-resp-encerramento"><option value="">Selecione...</option></select>
+          </div>
+          <div class="modal-rnc-group">
+            <label>Data de Encerramento</label>
+            <input type="date" id="mrnc-data-encerramento"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Causa raiz -->
+      <div class="modal-rnc-section">
+        <div class="modal-rnc-section-title">Análise de Causa Raiz</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:10px;" id="mrnc-porques-wrap">
+          <!-- preenchido via JS -->
+        </div>
+        <div class="modal-rnc-group">
+          <label>Causa Raiz Identificada</label>
+          <textarea id="mrnc-causa-raiz" rows="2"></textarea>
+        </div>
+      </div>
+
+      <!-- Ações de Contenção -->
+      <div class="modal-rnc-section">
+        <div class="modal-rnc-section-title">Ações de Contenção</div>
+        <div id="mrnc-contencoes"></div>
+        <button class="rnc-add-row" onclick="mRncAdicionarContencao()">+ Adicionar contenção</button>
+      </div>
+
+      <!-- Ações Corretivas -->
+      <div class="modal-rnc-section">
+        <div class="modal-rnc-section-title">Ações Corretivas</div>
+        <div id="mrnc-corretivas"></div>
+        <button class="rnc-add-row" onclick="mRncAdicionarCorretiva()">+ Adicionar corretiva</button>
+      </div>
+
+      <!-- Verificação de Eficácia -->
+      <div class="modal-rnc-section">
+        <div class="modal-rnc-section-title">Verificação de Eficácia</div>
+        <div class="modal-rnc-grid-3">
+          <div class="modal-rnc-group">
+            <label>Data de Verificação</label>
+            <input type="date" id="mrnc-data-verif"/>
+          </div>
+          <div class="modal-rnc-group">
+            <label>Resultado / Evidência</label>
+            <input type="text" id="mrnc-evidencia" placeholder="Descreva a evidência"/>
+          </div>
+          <div class="modal-rnc-group">
+            <label>Status da Verificação</label>
+            <select id="mrnc-status-verif">
+              <option value="">Selecione...</option>
+              <option value="Eficaz">Eficaz</option>
+              <option value="Não Eficaz">Não Eficaz</option>
+              <option value="Em Acompanhamento">Em Acompanhamento</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assinaturas -->
+      <div class="modal-rnc-section">
+        <div class="modal-rnc-section-title">Responsáveis</div>
+        <div class="modal-rnc-grid-2">
+          <div class="modal-rnc-group">
+            <label>Nome do Colaborador</label>
+            <input type="text" id="mrnc-colab-nome" placeholder="Nome do colaborador"/>
+          </div>
+          <div class="modal-rnc-group">
+            <label>Nome do Líder</label>
+            <select id="mrnc-lider-nome"><option value="">Selecione o líder...</option></select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-rnc-footer">
+      <button class="btn btn-outline" onclick="fecharModalRNC()">Cancelar</button>
+      <button class="btn btn-success" onclick="salvarEdicaoRNC()">💾 Salvar Alterações</button>
+    </div>
+  </div>
+</div>
 
 <!-- LIGHTBOX -->
 <div class="lightbox hidden" id="lightbox" onclick="fecharLightbox()">
