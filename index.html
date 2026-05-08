@@ -195,23 +195,9 @@ body{
 .progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:22px;box-shadow:var(--shadow);}
 .progress-label{font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;text-transform:uppercase;letter-spacing:.06em;}
 .progress-bg{background:var(--surface3);border-radius:99px;height:8px;overflow:hidden;}
-.progress-fill{height:100%;border-radius:99px;transition:width .5s ease,background .4s;}
-
-.senso-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:16px;box-shadow:var(--shadow);overflow:hidden;transition:border-color .2s,box-shadow .2s;}
-.senso-card:hover{border-color:var(--border2);box-shadow:var(--shadow-lg);}
-.senso-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(90deg,rgba(0,212,255,.08),rgba(0,212,255,.03));border-bottom:1px solid var(--border);gap:10px;}
-.senso-header-left{display:flex;align-items:center;gap:10px;}
-.senso-icon{width:34px;height:34px;border-radius:var(--rs);background:var(--al2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;color:var(--accent);font-family:'DM Mono',monospace;box-shadow:0 0 10px rgba(0,212,255,.15);}
-.senso-name{font-size:.9rem;font-weight:600;color:var(--text);}
-.senso-sub{font-size:.7rem;color:var(--muted);margin-top:1px;}
-.senso-score{font-family:'DM Mono',monospace;font-size:.75rem;font-weight:500;background:var(--al);border:1px solid var(--border2);border-radius:var(--r-full);padding:3px 12px;color:var(--accent);white-space:nowrap;}
-.item-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;transition:background .15s;}
 .item-row:last-child{border-bottom:none;}
 .item-row:hover{background:rgba(0,212,255,.04);}
 .item-text{flex:1;font-size:.83rem;color:var(--text2);min-width:160px;}
-.nota-btns{display:flex;gap:4px;flex-shrink:0;}
-.nota-btn{width:32px;height:32px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--surface3);font-size:.78rem;font-weight:600;font-family:'DM Mono',monospace;color:var(--muted);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
-.nota-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--al);}
 .nota-btn.active-good{background:rgba(0,255,163,.15);border-color:var(--success);color:var(--success);box-shadow:0 0 8px rgba(0,255,163,.2);transform:scale(1.08);}
 .nota-btn.active-mid{background:rgba(255,184,0,.15);border-color:var(--warn);color:var(--warn);box-shadow:0 0 8px rgba(255,184,0,.2);transform:scale(1.08);}
 .nota-btn.active-bad{background:var(--dl);border-color:var(--danger);color:var(--danger);box-shadow:0 0 8px rgba(255,77,106,.2);transform:scale(1.08);}
@@ -245,7 +231,6 @@ body{
 .btn-success:hover{background:rgba(0,255,163,.2);box-shadow:var(--glow-s);transform:translateY(-1px);}
 
 /* ESCALA */
-.escala-toolbar{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:18px 22px;margin-bottom:22px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
 .escala-toolbar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--success),transparent);opacity:.3;}
 .escala-toolbar h3{font-size:.83rem;font-weight:600;color:var(--text2);margin-bottom:14px;letter-spacing:.02em;}
 .escala-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -260,18 +245,10 @@ body{
 .filter-group{display:flex;gap:6px;flex-wrap:wrap;}
 .filter-btn{padding:4px 12px;border-radius:var(--r-full);font-size:.7rem;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--surface3);color:var(--muted);transition:all .18s;font-family:'Space Grotesk',sans-serif;letter-spacing:.03em;}
 .filter-btn:hover,.filter-btn.active{background:var(--al);border-color:var(--accent);color:var(--accent);box-shadow:0 0 8px rgba(0,212,255,.15);}
-.atividades-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
 .empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
 .empty-state svg{opacity:.15;margin-bottom:12px;}
 .empty-state p{font-size:.82rem;}
 
-.ativ-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s,border-color .2s;}
-.ativ-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);border-color:var(--border2);}
-.ativ-card-top{height:3px;}
-.ativ-card-top.critico{background:linear-gradient(90deg,var(--danger),rgba(255,77,106,.4));}
-.ativ-card-top.alto{background:linear-gradient(90deg,var(--warn),rgba(255,184,0,.4));}
-.ativ-card-top.medio{background:linear-gradient(90deg,#f9a825,rgba(249,168,37,.4));}
-.ativ-card-top.baixo{background:linear-gradient(90deg,var(--success),rgba(0,255,163,.4));}
 .ativ-card-body{padding:14px;flex:1;}
 .ativ-card-title{font-size:.87rem;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.4;}
 .ativ-card-meta{display:flex;flex-direction:column;gap:5px;}
@@ -283,13 +260,7 @@ body{
 .badge.alto{background:var(--wl);color:var(--warn);border:1px solid rgba(255,184,0,.3);}
 .badge.medio{background:rgba(249,168,37,.1);color:#f9a825;border:1px solid rgba(249,168,37,.3);}
 .badge.baixo{background:var(--sl);color:var(--success);border:1px solid rgba(0,255,163,.3);}
-.badge-status-ativ{padding:3px 10px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;border:none;font-family:'Space Grotesk',sans-serif;transition:opacity .2s;}
 .badge-status-ativ:hover{opacity:.75;}
-.badge-status-ativ.pendente{background:var(--al);color:var(--accent);border:1px solid var(--border2);}
-.badge-status-ativ.andamento{background:var(--wl);color:var(--warn);border:1px solid rgba(255,184,0,.3);}
-.badge-status-ativ.concluido{background:var(--sl);color:var(--success);border:1px solid rgba(0,255,163,.3);}
-.ativ-del{background:none;border:none;cursor:pointer;color:var(--muted2);font-size:16px;transition:color .2s;padding:2px 6px;}
-.ativ-del:hover{color:var(--danger);}
 .vencido{color:var(--danger)!important;font-weight:600;}
 
 /* DASHBOARD */
@@ -333,15 +304,6 @@ body{
 .empty-dash{text-align:center;padding:28px;color:var(--muted2);font-size:.8rem;}
 
 /* COMING SOON PLACEHOLDER */
-.coming-soon{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:320px;text-align:center;color:var(--muted);
-}
-.coming-soon .cs-icon{font-size:3rem;margin-bottom:16px;opacity:.3;}
-.coming-soon h2{font-size:1rem;font-weight:600;color:var(--text2);margin-bottom:6px;}
-.coming-soon p{font-size:.82rem;color:var(--muted);max-width:320px;}
-.cs-badge{display:inline-block;margin-top:14px;padding:4px 14px;border-radius:var(--r-full);background:var(--al);border:1px solid var(--border2);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
-
 /* OVERLAY MOBILE */
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;backdrop-filter:blur(4px);}
 .sb-overlay.open{display:block;}
@@ -357,9 +319,6 @@ body{
   .dash-row{grid-template-columns:1fr;}
   .escala-form{grid-template-columns:1fr;}
   .escala-form .full{grid-column:1;}
-  .item-row{flex-direction:column;align-items:flex-start;gap:8px;}
-  .nota-btns{width:100%;justify-content:space-between;}
-  .nota-btn{flex:1;}
   .page{padding:20px 14px 60px;}
 }
 
@@ -630,8 +589,7 @@ body{
 .badge-grau-menor{background:var(--wl);color:var(--warn);border:1px solid rgba(255,184,0,.3);display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--r-full);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
 @media(max-width:768px){.rnc-grid-5{grid-template-columns:1fr 1fr;}.rnc-grid-3{grid-template-columns:1fr;}.rnc-grid-2{grid-template-columns:1fr;}.rnc-acoes-grid{grid-template-columns:1fr;}.rnc-acao-row{grid-template-columns:1fr 28px;}.rnc-acao-row .rnc-resp-input,.rnc-acao-row .rnc-prazo-input{display:none;}}
 @media print{
-  .sb,.topbar,.actions,.nota-btns,.upload-zone,.foto-del,.escala-toolbar,.filter-group,.ativ-del,.badge-status-ativ{display:none!important;}
-  body{background:#fff!important;color:#111!important;}
+  .sb,.topbar,.actions,.nota-btns,.upload-zone,.foto-del,.escala-toolbar,.filter-group,.ativ-del,body{background:#fff!important;color:#111!important;}
   .main{margin-left:0;padding-top:0;}
   .page{display:block!important;}
 }
@@ -702,27 +660,6 @@ body{
 
   <nav style="flex:1;padding:0 8px;display:flex;flex-direction:column;gap:2px;">
 
-    <!-- MÓDULO 5S -->
-    <div class="sb-module">
-      <button class="sb-module-btn open" id="mod-5s" onclick="toggleMod('5s')">
-        <span class="mod-icon">⬟</span>
-        <span class="mod-label">5S</span>
-        <span class="mod-badge">3</span>
-        <span class="sb-chevron">▶</span>
-      </button>
-      <div class="sb-children open" id="children-5s">
-        <button class="sb-item active" onclick="goTo('5s-dashboard','5S','Dashboard')" id="item-5s-dashboard">
-          <span class="ic">📊</span> Dashboard
-        </button>
-        <button class="sb-item" onclick="goTo('5s-avaliacao','5S','Avaliação Diária')" id="item-5s-avaliacao">
-          <span class="ic">📋</span> Avaliação Diária
-        </button>
-        <button class="sb-item" onclick="goTo('5s-escala','5S','Escala de Atividades')" id="item-5s-escala">
-          <span class="ic">📌</span> Escala de Atividades
-        </button>
-      </div>
-    </div>
-
     <!-- GESTÃO DE PROBLEMAS -->
     <div class="sb-module" style="margin-top:8px;">
       <button class="sb-module-btn" id="mod-gp" onclick="toggleMod('gp')">
@@ -761,40 +698,6 @@ body{
         </button>
       </div>
     </div>
-    <div class="sb-module" style="margin-top:8px;">
-      <button class="sb-module-btn" id="mod-audit" onclick="toggleMod('audit')">
-        <span class="mod-icon">🔍</span>
-        <span class="mod-label">Auditorias</span>
-        <span class="sb-chevron">▶</span>
-      </button>
-      <div class="sb-children" id="children-audit">
-        <button class="sb-item dim"><span class="ic">📅</span> Plano de Auditoria</button>
-        <button class="sb-item dim"><span class="ic">📝</span> Registros</button>
-        <button class="sb-item dim"><span class="ic">📊</span> Resultados</button>
-      </div>
-    </div>
-    <div class="sb-module">
-      <button class="sb-module-btn" id="mod-ind" onclick="toggleMod('ind')">
-        <span class="mod-icon">📈</span>
-        <span class="mod-label">Indicadores</span>
-        <span class="sb-chevron">▶</span>
-      </button>
-      <div class="sb-children" id="children-ind">
-        <button class="sb-item dim"><span class="ic">🎯</span> KPIs Qualidade</button>
-        <button class="sb-item dim"><span class="ic">📉</span> Tendências</button>
-      </div>
-    </div>
-    <div class="sb-module">
-      <button class="sb-module-btn" id="mod-trein" onclick="toggleMod('trein')">
-        <span class="mod-icon">🎓</span>
-        <span class="mod-label">Treinamentos</span>
-        <span class="sb-chevron">▶</span>
-      </button>
-      <div class="sb-children" id="children-trein">
-        <button class="sb-item dim"><span class="ic">📚</span> Matriz de Skills</button>
-        <button class="sb-item dim"><span class="ic">✅</span> Controle</button>
-      </div>
-    </div>
 
   </nav>
 
@@ -809,7 +712,7 @@ body{
   <div style="display:flex;align-items:center;gap:12px;">
     <button class="topbar-ham" onclick="toggleSidebar()">☰</button>
     <div class="topbar-breadcrumb">
-      <span class="topbar-mod" id="tb-mod">5S</span>
+      <span class="topbar-mod" id="tb-mod">Gestão de Problemas</span>
       <span class="topbar-sep">›</span>
       <span class="topbar-page" id="tb-page">Dashboard</span>
     </div>
@@ -833,169 +736,8 @@ body{
 
 <!-- MAIN CONTENT -->
 <div class="main">
-
-  <!-- PAGE: 5S DASHBOARD -->
-  <div class="page active" id="page-5s-dashboard">
-    <div class="dash-grid">
-      <div class="dash-kpi a"><div class="dash-kpi-icon">📊</div><div class="dash-kpi-value" id="dk-pct">—</div><div class="dash-kpi-label">Score 5S</div><div class="dash-kpi-sub">Pontuação geral</div></div>
-      <div class="dash-kpi g"><div class="dash-kpi-icon">✅</div><div class="dash-kpi-value" id="dk-concluidas">—</div><div class="dash-kpi-label">Concluídas</div><div class="dash-kpi-sub" id="dk-sub">de 0 atividades</div></div>
-      <div class="dash-kpi d"><div class="dash-kpi-icon">⚠️</div><div class="dash-kpi-value" id="dk-vencidas">—</div><div class="dash-kpi-label">Vencidas</div><div class="dash-kpi-sub">Prazo ultrapassado</div></div>
-      <div class="dash-kpi d"><div class="dash-kpi-icon">🔴</div><div class="dash-kpi-value" id="dk-criticas">—</div><div class="dash-kpi-label">Críticas abertas</div><div class="dash-kpi-sub">Atenção imediata</div></div>
-    </div>
-    <div class="dash-row">
-      <div class="dash-card">
-        <div class="dash-card-header">📈 Score por Senso</div>
-        <div class="dash-card-body" id="dash-sensos-bars"><div class="empty-dash">Preencha a avaliação para ver os dados.</div></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-header">🎯 Status das Atividades</div>
-        <div class="dash-card-body">
-          <div class="donut-wrap">
-            <canvas id="dash-donut" width="100" height="100"></canvas>
-            <div class="donut-legend" id="dash-donut-legend"><div class="empty-dash" style="padding:4px;">Sem dados</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="dash-row">
-      <div class="dash-card">
-        <div class="dash-card-header">🚦 Por Criticidade</div>
-        <div class="dash-card-body" id="dash-crit-bars"><div class="empty-dash">Nenhuma atividade cadastrada.</div></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-header">🏠 Por Setor</div>
-        <div class="dash-card-body" id="dash-setor-bars"><div class="empty-dash">Nenhuma atividade cadastrada.</div></div>
-      </div>
-    </div>
-    <div class="dash-card full" style="margin-bottom:24px;">
-      <div class="dash-card-header">🔔 Alertas e Pendências</div>
-      <div class="dash-card-body" id="dash-alertas"><div class="empty-dash">✅ Sem alertas no momento.</div></div>
-    </div>
-  </div>
-
-  <!-- PAGE: 5S AVALIAÇÃO -->
-  <div class="page" id="page-5s-avaliacao">
-    <div class="meta-card">
-      <div class="meta-group">
-        <label>Área / Setor</label>
-        <select id="setor">
-          <option value="">Selecione...</option>
-          <option value="Inbound">Inbound</option>
-          <option value="Outbound">Outbound</option>
-          <option value="Red Carpet">Red Carpet</option>
-        </select>
-      </div>
-      <div class="meta-group">
-        <label>Data</label>
-        <input type="date" id="data"/>
-      </div>
-      <div class="meta-group">
-        <label>Avaliador</label>
-        <input type="text" id="avaliador" placeholder="Nome completo"/>
-      </div>
-    </div>
-    <div class="kpi-bar">
-      <div class="kpi a"><div class="kpi-label">Pontuação</div><div class="kpi-value" id="m-total">0/60</div></div>
-      <div class="kpi a"><div class="kpi-label">Percentual</div><div class="kpi-value" id="m-pct">0%</div></div>
-      <div class="kpi a"><div class="kpi-label">Fotos</div><div class="kpi-value" id="m-fotos">0</div></div>
-      <div class="kpi a"><div class="kpi-label">Status</div><div class="kpi-value" id="m-status" style="font-size:1rem;">—</div></div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-label"><span>Score Geral 5S</span><span id="pct-label" style="color:var(--accent);font-family:'DM Mono',monospace;">0%</span></div>
-      <div class="progress-bg"><div class="progress-fill" id="prog-fill" style="width:0%;background:var(--muted2);"></div></div>
-    </div>
-    <div id="sensos-area"></div>
-    <div class="fotos-card">
-      <div class="fotos-header">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-        Registro Fotográfico
-      </div>
-      <div class="fotos-body">
-        <label class="upload-zone">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Clique para adicionar fotos (múltiplas permitidas)
-          <input type="file" accept="image/*" multiple id="foto-input" style="display:none;"/>
-        </label>
-        <div class="fotos-grid" id="fotos-grid"></div>
-      </div>
-    </div>
-    <div class="obs-card">
-      <div class="obs-header">📝 Observações e Ações Corretivas</div>
-      <div class="obs-body"><textarea id="obs" placeholder="Descreva os pontos de melhoria e ações necessárias..."></textarea></div>
-    </div>
-    <div class="actions">
-      <button class="btn btn-success" onclick="salvarAvaliacao5S()">💾 Salvar Avaliação</button>
-      <button class="btn btn-primary" onclick="window.print()">🖨 Imprimir / PDF</button>
-      <button class="btn btn-outline" onclick="resetarAvaliacao()">🗑 Limpar</button>
-    </div>
-  </div>
-
-  <!-- PAGE: 5S ESCALA -->
-  <div class="page" id="page-5s-escala">
-    <div class="escala-toolbar">
-      <h3>+ Nova Atividade</h3>
-      <div class="escala-form">
-        <div class="form-group full">
-          <label>Atividade</label>
-          <input type="text" id="e-atividade" placeholder="Descreva a atividade 5S..."/>
-        </div>
-        <div class="form-group">
-          <label>Responsável</label>
-          <input type="text" id="e-responsavel" placeholder="Nome do responsável"/>
-        </div>
-        <div class="form-group">
-          <label>Prazo</label>
-          <input type="date" id="e-prazo"/>
-        </div>
-        <div class="form-group">
-          <label>Criticidade</label>
-          <select id="e-criticidade">
-            <option value="">Selecione...</option>
-            <option value="critico">🔴 Crítico</option>
-            <option value="alto">🟠 Alto</option>
-            <option value="medio">🟡 Médio</option>
-            <option value="baixo">🟢 Baixo</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Setor</label>
-          <select id="e-setor">
-            <option value="">Todos</option>
-            <option value="Inbound">Inbound</option>
-            <option value="Outbound">Outbound</option>
-            <option value="Red Carpet">Red Carpet</option>
-          </select>
-        </div>
-        <div class="form-group full" style="display:flex;justify-content:flex-end;">
-          <button class="btn btn-success" onclick="adicionarAtividade()">✓ Adicionar atividade</button>
-        </div>
-      </div>
-    </div>
-    <div class="cards-header">
-      <h3 id="cards-count">Atividades (0)</h3>
-      <div class="filter-group">
-        <button class="filter-btn active" onclick="filtrar('todos',this)">Todos</button>
-        <button class="filter-btn" onclick="filtrar('critico',this)">🔴 Crítico</button>
-        <button class="filter-btn" onclick="filtrar('alto',this)">🟠 Alto</button>
-        <button class="filter-btn" onclick="filtrar('medio',this)">🟡 Médio</button>
-        <button class="filter-btn" onclick="filtrar('baixo',this)">🟢 Baixo</button>
-        <button class="filter-btn" onclick="filtrar('pendente',this)">Pendentes</button>
-        <button class="filter-btn" onclick="filtrar('concluido',this)">Concluídos</button>
-      </div>
-    </div>
-    <div class="atividades-grid" id="atividades-grid">
-      <div class="empty-state" style="grid-column:1/-1;">
-        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg>
-        <p>Nenhuma atividade cadastrada.<br>Adicione a primeira acima.</p>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ═══════ GESTÃO DE PROBLEMAS ═══════ -->
-
   <!-- PAGE: GP DASHBOARD -->
-  <div class="page" id="page-gp-dashboard">
+  <div class="page active" id="page-gp-dashboard">
     <div class="gp-dash-grid">
       <div class="gp-kpi total" onclick="goTo('gp-lista','Gestão de Problemas','Todos os Tickets')"><div class="gp-kpi-icon">🎫</div><div class="gp-kpi-value" id="gpd-total">0</div><div class="gp-kpi-label">Total de Tickets</div></div>
       <div class="gp-kpi critico" onclick="gpFiltroRapido('critico')"><div class="gp-kpi-icon">🔴</div><div class="gp-kpi-value" id="gpd-critico">0</div><div class="gp-kpi-label">Críticos Abertos</div></div>
@@ -1186,16 +928,6 @@ body{
       </div>
     </div>
   </div>
-
-  <!-- PAGES: MÓDULOS FUTUROS -->
-  <div class="page" id="page-audit-plano">
-    <div class="coming-soon"><div class="cs-icon">🔍</div><h2>Plano de Auditoria</h2><p>Este módulo está em desenvolvimento e será disponibilizado em breve.</p><span class="cs-badge">Em breve</span></div>
-  </div>
-  <div class="page" id="page-audit-registros">
-    <div class="coming-soon"><div class="cs-icon">📝</div><h2>Registros de Auditoria</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
-  </div>
-  <div class="page" id="page-audit-resultados">
-    <div class="coming-soon"><div class="cs-icon">📊</div><h2>Resultados de Auditoria</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
   </div>
   <!-- PAGE: NC NOVO -->
   <div class="page" id="page-nc-novo">
@@ -1413,17 +1145,6 @@ body{
     </div>
     <div id="rnc-list"><div class="empty-state"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>Nenhum RNC registrado ainda.</p></div></div>
   </div>
-  <div class="page" id="page-ind-kpis">
-    <div class="coming-soon"><div class="cs-icon">🎯</div><h2>KPIs de Qualidade</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
-  </div>
-  <div class="page" id="page-ind-tendencias">
-    <div class="coming-soon"><div class="cs-icon">📉</div><h2>Tendências</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
-  </div>
-  <div class="page" id="page-trein-matriz">
-    <div class="coming-soon"><div class="cs-icon">📚</div><h2>Matriz de Skills</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
-  </div>
-  <div class="page" id="page-trein-controle">
-    <div class="coming-soon"><div class="cs-icon">✅</div><h2>Controle de Treinamentos</h2><p>Este módulo está em desenvolvimento.</p><span class="cs-badge">Em breve</span></div>
   </div>
 
 </div>
@@ -1533,7 +1254,7 @@ function mostrarLogin(){
   if(tfAbertor) tfAbertor.value='';
   document.getElementById('app-shell').style.display='none';
   document.getElementById('auth-screen').style.display='flex';
-  tickets=[];atividades=[];rncs=[];
+  tickets=[];rncs=[];
 }
 
 async function carregarPerfil(user){
@@ -1633,7 +1354,6 @@ function iniciarRealtime(){
     .channel('inhaus-realtime')
     .on('postgres_changes',{event:'*',schema:'public',table:'tickets'},       payload=>_handleRealtimeTicket(payload))
     .on('postgres_changes',{event:'*',schema:'public',table:'ticket_historico'},payload=>_handleRealtimeHistorico(payload))
-    .on('postgres_changes',{event:'*',schema:'public',table:'atividades_5s'}, payload=>_handleRealtimeAtividade(payload))
     .on('postgres_changes',{event:'*',schema:'public',table:'nao_conformidades'},payload=>_handleRealtimeRNC(payload))
     .subscribe();
 }
@@ -1672,19 +1392,6 @@ function _handleRealtimeHistorico(p){
   }
 }
 
-function _handleRealtimeAtividade(p){
-  if(p.eventType==='INSERT'){
-    if(!atividades.find(a=>a.id===p.new.id)){
-      atividades.unshift(_mapAtividade(p.new));renderAtividades();
-    }
-  } else if(p.eventType==='UPDATE'){
-    const idx=atividades.findIndex(a=>a.id===p.new.id);
-    if(idx>=0){atividades[idx]=_mapAtividade(p.new);renderAtividades();}
-  } else if(p.eventType==='DELETE'){
-    atividades=atividades.filter(a=>a.id!==p.old.id);renderAtividades();
-  }
-}
-
 function _handleRealtimeRNC(p){
   if(p.eventType==='INSERT'){
     if(!rncs.find(r=>r.id===p.new.id)){rncs.unshift(p.new);atualizarNCBadge();renderRNCs();}
@@ -1712,14 +1419,11 @@ function _mapTicketPartial(t){
 function _mapHistorico(h){
   return {_id:h.id,dt:new Date(h.criado_em).toLocaleDateString('pt-BR')+' '+new Date(h.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),usuario:h.usuario,acao:h.acao,nota:h.nota,status:h.status,imagens:h.imagens||[]};
 }
-function _mapAtividade(a){
-  return {id:a.id,atividade:a.atividade,responsavel:a.responsavel,prazo:a.prazo,criticidade:a.criticidade,setor:a.setor,status:a.status};
-}
 
 async function carregarDados(){
   showLoading('Sincronizando...');
   try{
-    await Promise.all([carregarTickets(),carregarAtividades(),carregarUsuarios(),carregarRNCs()]);
+    await Promise.all([carregarTickets(),carregarUsuarios(),carregarRNCs()]);
     hideLoading();
     iniciarRealtime(); // inicia WebSocket após carga inicial
   }catch(e){
@@ -1767,30 +1471,6 @@ async function excluirTicketDB(id){
   return true;
 }
 
-// Atividades
-async function carregarAtividades(){
-  const {data,error}=await _supa.from('atividades_5s').select('*').order('criado_em',{ascending:false});
-  if(error){toast('Erro ao carregar atividades: '+error.message,'error');return;}
-  atividades=(data||[]).map(a=>({id:a.id,atividade:a.atividade,responsavel:a.responsavel,prazo:a.prazo,criticidade:a.criticidade,setor:a.setor,status:a.status}));
-  renderAtividades();
-}
-
-async function salvarAtividade(a){
-  const {data,error}=await _supa.from('atividades_5s').insert({atividade:a.atividade,responsavel:a.responsavel,prazo:a.prazo||null,criticidade:a.criticidade,setor:a.setor||null,status:'pendente',user_id:currentUser.id}).select().single();
-  if(error){toast('Erro ao salvar atividade: '+error.message,'error');return null;}
-  return data;
-}
-
-async function atualizarStatusAtividade(id,status){
-  const {error}=await _supa.from('atividades_5s').update({status,atualizado_em:new Date().toISOString()}).eq('id',id);
-  if(error) toast('Erro ao atualizar: '+error.message,'error');
-}
-
-async function excluirAtividade(id){
-  const {error}=await _supa.from('atividades_5s').delete().eq('id',id);
-  if(error){toast('Erro ao excluir: '+error.message,'error');return false;}
-  return true;
-}
 
 // Upload imagens Storage
 async function uploadImagens(imgs,pasta){
@@ -1825,7 +1505,6 @@ function goTo(pageId, mod, pageName){
   if(item) item.classList.add('active');
   document.getElementById('tb-mod').textContent = mod;
   document.getElementById('tb-page').textContent = pageName;
-  if(pageId==='5s-dashboard') renderDashboard();
   if(pageId==='gp-dashboard') renderGPDashboard();
   if(pageId==='gp-lista') renderTickets();
   if(pageId==='gp-novo') popularSelectResponsavel();
@@ -1850,244 +1529,6 @@ function closeSidebar(){
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sb-overlay').classList.remove('open');
 }
-
-// ── AVALIAÇÃO 5S ──
-const sensos=[
-  {num:'1',nome:'Seiri',trad:'Utilização',itens:['Itens desnecessários foram removidos da área','Apenas materiais e ferramentas necessários estão presentes','Itens estão identificados quanto ao destino (uso, descarte, guarda)']},
-  {num:'2',nome:'Seiton',trad:'Organização',itens:['Cada item tem um lugar definido e sinalizado','Materiais estão facilmente acessíveis e visíveis']},
-  {num:'3',nome:'Seiso',trad:'Limpeza',itens:['Área está limpa e sem sujeira visível','Equipamentos e superfícies estão limpos','Fontes de sujeira foram identificadas ou eliminadas']},
-  {num:'4',nome:'Seiketsu',trad:'Padronização',itens:['Padrões visuais e procedimentos estão afixados/visíveis','A equipe conhece e segue os padrões definidos']},
-  {num:'5',nome:'Shitsuke',trad:'Disciplina',itens:['Avaliações anteriores foram corrigidas','A equipe mantém os 5S sem necessidade de cobrança']},
-];
-const notas={};
-const totalMax=sensos.reduce((a,s)=>a+s.itens.length,0)*5;
-let fotosCount=0;
-
-function btnClass(n){return n>=4?'active-good':n>=2?'active-mid':'active-bad';}
-
-function build(){
-  document.getElementById('footer-year').textContent=new Date().getFullYear();
-  const area=document.getElementById('sensos-area');
-  sensos.forEach(s=>{
-    const card=document.createElement('div');card.className='senso-card';
-    let rows='';
-    s.itens.forEach((item,i)=>{
-      const key=`s${s.num}_${i}`;notas[key]=-1;
-      rows+=`<div class="item-row"><span class="item-text">${item}</span><div class="nota-btns" id="btns_${key}">${[0,1,2,3,4,5].map(n=>`<button class="nota-btn" onclick="setNota('${key}',${n})">${n}</button>`).join('')}</div></div>`;
-    });
-    card.innerHTML=`<div class="senso-header"><div class="senso-header-left"><div class="senso-icon">${s.num}S</div><div><div class="senso-name">${s.nome} — ${s.trad}</div><div class="senso-sub">${s.itens.length} critério${s.itens.length>1?'s':''} · máx ${s.itens.length*5} pts</div></div></div><div class="senso-score" id="score_s${s.num}">0/${s.itens.length*5}</div></div>${rows}`;
-    area.appendChild(card);
-  });
-  document.getElementById('data').valueAsDate=new Date();
-}
-
-function setNota(key,n){
-  notas[key]=n;
-  document.getElementById('btns_'+key).querySelectorAll('.nota-btn').forEach((b,i)=>{b.className='nota-btn';if(i===n)b.classList.add(btnClass(n));});
-  calcular();
-}
-
-function calcular(){
-  const soma=Object.values(notas).filter(v=>v>=0).reduce((a,b)=>a+b,0);
-  const pct=Math.round(soma/totalMax*100);
-  document.getElementById('m-total').textContent=`${soma}/${totalMax}`;
-  document.getElementById('m-pct').textContent=`${pct}%`;
-  document.getElementById('pct-label').textContent=`${pct}%`;
-  const fill=document.getElementById('prog-fill');
-  fill.style.width=pct+'%';
-  fill.style.background=pct>=80?'var(--success)':pct>=60?'var(--warn)':'var(--danger)';
-  const st=document.getElementById('m-status'),badge=document.getElementById('badge-status');
-  const kpis=document.querySelectorAll('.kpi');
-  if(pct>=80){st.textContent='Ótimo';st.style.color='var(--success)';badge.textContent='✓ Ótimo';badge.style.color='var(--success)';badge.style.borderColor='rgba(0,255,163,.4)';badge.style.background='var(--sl)';kpis.forEach(k=>k.className='kpi g');}
-  else if(pct>=60){st.textContent='Regular';st.style.color='var(--warn)';badge.textContent='⚠ Regular';badge.style.color='var(--warn)';badge.style.borderColor='rgba(255,184,0,.4)';badge.style.background='var(--wl)';kpis.forEach(k=>k.className='kpi w');}
-  else if(pct>0){st.textContent='Crítico';st.style.color='var(--danger)';badge.textContent='✗ Crítico';badge.style.color='var(--danger)';badge.style.borderColor='rgba(255,77,106,.4)';badge.style.background='var(--dl)';kpis.forEach(k=>k.className='kpi d');}
-  else{st.textContent='—';badge.textContent='—';badge.style.color='var(--accent)';badge.style.borderColor='var(--border2)';badge.style.background='var(--al)';kpis.forEach(k=>k.className='kpi a');}
-  sensos.forEach(s=>{
-    const sub=s.itens.map((_,i)=>`s${s.num}_${i}`).filter(k=>notas[k]>=0).reduce((a,k)=>a+notas[k],0);
-    document.getElementById(`score_s${s.num}`).textContent=`${sub}/${s.itens.length*5}`;
-  });
-}
-
-document.getElementById('foto-input').addEventListener('change',function(){
-  Array.from(this.files).forEach(file=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      fotosCount++;document.getElementById('m-fotos').textContent=fotosCount;
-      const w=document.createElement('div');w.className='foto-item';
-      const img=document.createElement('img');img.src=e.target.result;
-      const lbl=document.createElement('div');lbl.className='foto-label';lbl.textContent=file.name;
-      const del=document.createElement('button');del.className='foto-del';del.textContent='×';
-      del.onclick=()=>{w.remove();fotosCount--;document.getElementById('m-fotos').textContent=fotosCount;};
-      w.appendChild(img);w.appendChild(lbl);w.appendChild(del);
-      document.getElementById('fotos-grid').appendChild(w);
-    };r.readAsDataURL(file);
-  });this.value='';
-});
-
-async function salvarAvaliacao5S(){
-  const setor = document.getElementById('setor').value;
-  const data  = document.getElementById('data').value;
-  const avaliador = document.getElementById('avaliador').value.trim();
-  if(!setor||!avaliador){alert('Preencha setor e avaliador antes de salvar.');return;}
-  const temNotas = Object.values(notas).some(v=>v>=0);
-  if(!temNotas){alert('Preencha ao menos um critério antes de salvar.');return;}
-  const soma = Object.values(notas).filter(v=>v>=0).reduce((a,b)=>a+b,0);
-  const pct  = Math.round(soma/totalMax*100);
-  const obs  = document.getElementById('obs').value.trim();
-  const payload = {
-    setor, data:data, avaliador,
-    notas:JSON.stringify(notas),
-    score:soma, percentual:pct, observacoes:obs||null,
-    user_id:currentUser.id
-  };
-  showLoading('Salvando avaliação...');
-  const {error} = await _supa.from('avaliacoes_5s').insert(payload);
-  hideLoading();
-  if(error){toast('Erro ao salvar: '+error.message,'error');return;}
-  toast('Avaliação salva com sucesso!','success');
-}
-
-function resetarAvaliacao(){
-  if(!confirm('Limpar formulário?'))return;
-  Object.keys(notas).forEach(k=>notas[k]=-1);
-  document.querySelectorAll('.nota-btn').forEach(b=>b.className='nota-btn');
-  sensos.forEach(s=>document.getElementById(`score_s${s.num}`).textContent=`0/${s.itens.length*5}`);
-  document.getElementById('m-total').textContent=`0/${totalMax}`;
-  document.getElementById('m-pct').textContent='0%';
-  document.getElementById('pct-label').textContent='0%';
-  document.getElementById('prog-fill').style.cssText='width:0%;background:var(--muted2);';
-  document.getElementById('m-status').textContent='—';
-  document.getElementById('badge-status').textContent='—';
-  document.getElementById('obs').value='';
-  document.getElementById('fotos-grid').innerHTML='';
-  fotosCount=0;document.getElementById('m-fotos').textContent='0';
-  document.getElementById('setor').selectedIndex=0;
-  document.getElementById('avaliador').value='';
-  document.getElementById('data').valueAsDate=new Date();
-}
-
-// ── ESCALA ──
-let atividades=[];let filtroAtual='todos';
-const critLabel={critico:'🔴 Crítico',alto:'🟠 Alto',medio:'🟡 Médio',baixo:'🟢 Baixo'};
-const stLabel={pendente:'Pendente',andamento:'Em andamento',concluido:'Concluído'};
-
-async function adicionarAtividade(){
-  const ativ=document.getElementById('e-atividade').value.trim();
-  const resp=document.getElementById('e-responsavel').value.trim();
-  const prazo=document.getElementById('e-prazo').value;
-  const crit=document.getElementById('e-criticidade').value;
-  const setor=document.getElementById('e-setor').value;
-  if(!ativ||!resp||!prazo||!crit){alert('Preencha todos os campos obrigatórios.');return;}
-  // Optimistic: adiciona na UI imediatamente
-  const tempId='temp_'+Date.now();
-  atividades.unshift({id:tempId,atividade:ativ,responsavel:resp,prazo,criticidade:crit,setor,status:'pendente'});
-  ['e-atividade','e-responsavel','e-prazo'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('e-criticidade').selectedIndex=0;
-  document.getElementById('e-setor').selectedIndex=0;
-  renderAtividades();
-  // Persiste em background
-  const {data,error}=await _supa.from('atividades_5s').insert({atividade:ativ,responsavel:resp,prazo:prazo||null,criticidade:crit,setor:setor||null,status:'pendente',user_id:currentUser.id}).select().single();
-  if(error){
-    atividades=atividades.filter(a=>a.id!==tempId);
-    renderAtividades();
-    toast('Erro ao salvar: '+error.message,'error');
-    return;
-  }
-  const idx=atividades.findIndex(a=>a.id===tempId);
-  if(idx>=0) atividades[idx]=_mapAtividade(data);
-  toast('Atividade adicionada!','success');
-}
-async function toggleStatus(id){
-  const a=atividades.find(x=>x.id===id);
-  if(!a) return;
-  const c=['pendente','andamento','concluido'];
-  const novoStatus=c[(c.indexOf(a.status)+1)%c.length];
-  a.status=novoStatus;
-  renderAtividades();
-  const {error}=await _supa.from('atividades_5s').update({status:novoStatus,atualizado_em:new Date().toISOString()}).eq('id',id);
-  if(error){
-    a.status=c[(c.indexOf(novoStatus)-1+c.length)%c.length];
-    renderAtividades();
-    toast('Erro ao atualizar status: '+error.message,'error');
-  }
-}
-async function removerAtividade(id){
-  if(!confirm('Remover atividade?'))return;
-  const backup=atividades.find(a=>a.id===id);
-  atividades=atividades.filter(a=>a.id!==id);
-  renderAtividades();
-  const {error}=await _supa.from('atividades_5s').delete().eq('id',id);
-  if(error){
-    if(backup) atividades.push(backup);
-    renderAtividades();
-    toast('Erro ao remover: '+error.message,'error');
-  } else { toast('Atividade removida.','info'); }
-}
-function filtrar(f,btn){filtroAtual=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderAtividades();}
-function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function isVencido(prazo,status){if(status==='concluido'||!prazo)return false;return prazo<todayStr();}
-function tkIsVencido(t){if(['resolvido','fechado'].includes(t.status)||!t.prazo)return false;return t.prazo<todayStr();}
-function renderAtividades(){
-  const grid=document.getElementById('atividades-grid');
-  let lista=atividades;
-  if(filtroAtual==='pendente')lista=lista.filter(a=>a.status==='pendente');
-  else if(filtroAtual==='concluido')lista=lista.filter(a=>a.status==='concluido');
-  else if(filtroAtual!=='todos')lista=lista.filter(a=>a.criticidade===filtroAtual);
-  document.getElementById('cards-count').textContent=`Atividades (${atividades.length})`;
-  grid.innerHTML='';
-  if(lista.length===0){
-    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1;"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg><p>${atividades.length===0?'Nenhuma atividade cadastrada ainda.<br>Adicione a primeira acima.':'Nenhuma atividade para este filtro.'}</p></div>`;
-    return;
-  }
-  lista.forEach(a=>{
-    const vencido=isVencido(a.prazo,a.status);
-    const card=document.createElement('div');card.className='ativ-card';
-    card.innerHTML=`<div class="ativ-card-top ${a.criticidade}"></div><div class="ativ-card-body"><div class="ativ-card-title">${a.atividade}</div><div class="ativ-card-meta"><div class="ativ-meta-row"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${a.responsavel}</div><div class="ativ-meta-row ${vencido?'vencido':''}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${fmtData(a.prazo)}${vencido?' ⚠ Vencido':''}</div>${a.setor?`<div class="ativ-meta-row"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>${a.setor}</div>`:''}</div></div><div class="ativ-card-footer"><span class="badge ${a.criticidade}">${critLabel[a.criticidade]}</span><div style="display:flex;align-items:center;gap:6px;"><button class="badge-status-ativ ${a.status}" onclick="toggleStatus(${a.id})">${stLabel[a.status]}</button><button class="ativ-del" onclick="removerAtividade(${a.id})">×</button></div></div>`;
-    grid.appendChild(card);
-  });
-}
-
-// ── DASHBOARD ──
-function renderDashboard(){
-  const soma=Object.values(notas).filter(v=>v>=0).reduce((a,b)=>a+b,0);
-  const pct=Math.round(soma/totalMax*100);
-  document.getElementById('dk-pct').textContent=pct>0?pct+'%':'—';
-  const total=atividades.length;
-  const concluidas=atividades.filter(a=>a.status==='concluido').length;
-  const vencidas=atividades.filter(a=>isVencido(a.prazo,a.status)).length;
-  const criticas=atividades.filter(a=>a.criticidade==='critico'&&a.status!=='concluido').length;
-  document.getElementById('dk-concluidas').textContent=total>0?concluidas:'—';
-  document.getElementById('dk-sub').textContent=`de ${total} atividades`;
-  document.getElementById('dk-vencidas').textContent=vencidas||'—';
-  document.getElementById('dk-criticas').textContent=criticas||'—';
-  const sb=document.getElementById('dash-sensos-bars');
-  const temNotas=Object.values(notas).some(v=>v>=0);
-  if(!temNotas){sb.innerHTML='<div class="empty-dash">Preencha a avaliação para ver os dados.</div>';}
-  else{sb.innerHTML='';sensos.forEach(s=>{const maxS=s.itens.length*5;const sumS=s.itens.map((_,i)=>notas[`s${s.num}_${i}`]||0).filter(v=>v>=0).reduce((a,b)=>a+b,0);const pctS=Math.round(sumS/maxS*100);const cor=pctS>=80?'var(--success)':pctS>=60?'var(--warn)':'var(--danger)';sb.innerHTML+=`<div class="bar-row"><span class="bar-label">${s.num}S ${s.nome}</span><div class="bar-track"><div class="bar-fill" style="width:${pctS}%;background:${cor};box-shadow:0 0 6px ${cor};"></div></div><span class="bar-val">${pctS}%</span></div>`;});}
-  const stC={pendente:atividades.filter(a=>a.status==='pendente').length,andamento:atividades.filter(a=>a.status==='andamento').length,concluido:atividades.filter(a=>a.status==='concluido').length};
-  const stCo={pendente:'#00D4FF',andamento:'#FFB800',concluido:'#00FFA3'};
-  const stN={pendente:'Pendente',andamento:'Em andamento',concluido:'Concluído'};
-  const canvas=document.getElementById('dash-donut');const ctx=canvas.getContext('2d');ctx.clearRect(0,0,100,100);
-  const totalD=Object.values(stC).reduce((a,b)=>a+b,0);
-  if(totalD===0){ctx.beginPath();ctx.arc(50,50,35,0,Math.PI*2);ctx.strokeStyle='rgba(0,212,255,.15)';ctx.lineWidth=12;ctx.stroke();}
-  else{let start=-Math.PI/2;Object.entries(stC).forEach(([k,v])=>{if(v===0)return;const angle=(v/totalD)*Math.PI*2;ctx.beginPath();ctx.moveTo(50,50);ctx.arc(50,50,35,start,start+angle);ctx.closePath();ctx.fillStyle=stCo[k];ctx.fill();start+=angle;});ctx.beginPath();ctx.arc(50,50,22,0,Math.PI*2);ctx.fillStyle='#070E1C';ctx.fill();ctx.fillStyle='#D8EEF8';ctx.font='bold 12px DM Mono,monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(totalD,50,50);}
-  document.getElementById('dash-donut-legend').innerHTML=Object.entries(stC).map(([k,v])=>`<div class="legend-row"><div class="legend-dot" style="background:${stCo[k]};box-shadow:0 0 4px ${stCo[k]};"></div><span>${stN[k]}: <strong style="color:${stCo[k]};">${v}</strong></span></div>`).join('');
-  const cb=document.getElementById('dash-crit-bars');
-  const crits=[{k:'critico',label:'🔴 Crítico',cor:'var(--danger)',bg:'var(--dl)'},{k:'alto',label:'🟠 Alto',cor:'var(--warn)',bg:'var(--wl)'},{k:'medio',label:'🟡 Médio',cor:'#f9a825',bg:'rgba(249,168,37,.1)'},{k:'baixo',label:'🟢 Baixo',cor:'var(--success)',bg:'var(--sl)'}];
-  if(total===0){cb.innerHTML='<div class="empty-dash">Nenhuma atividade cadastrada.</div>';}
-  else{cb.innerHTML='';crits.forEach(c=>{const cnt=atividades.filter(a=>a.criticidade===c.k).length;const pctC=Math.round(cnt/total*100);cb.innerHTML+=`<div class="crit-row"><span class="crit-badge2" style="background:${c.bg};color:${c.cor};border:1px solid ${c.cor}20;">${c.label}</span><span class="crit-count">${cnt}</span><div class="crit-bar-track"><div class="crit-bar-fill" style="width:${pctC}%;background:${c.cor};box-shadow:0 0 5px ${c.cor};"></div></div><span class="bar-val">${pctC}%</span></div>`;});}
-  const stb=document.getElementById('dash-setor-bars');
-  if(total===0){stb.innerHTML='<div class="empty-dash">Nenhuma atividade cadastrada.</div>';}
-  else{stb.innerHTML='';['Inbound','Outbound','Red Carpet'].forEach(s=>{const cnt=atividades.filter(a=>a.setor===s).length;const pctSt=Math.round(cnt/total*100);stb.innerHTML+=`<div class="bar-row"><span class="bar-label">${s}</span><div class="bar-track"><div class="bar-fill" style="width:${pctSt}%;background:var(--accent);box-shadow:0 0 6px rgba(0,212,255,.3);"></div></div><span class="bar-val">${cnt}</span></div>`;});}
-  const al=document.getElementById('dash-alertas');
-  const alertas=[];
-  atividades.filter(a=>isVencido(a.prazo,a.status)).forEach(a=>alertas.push({cor:'var(--danger)',text:`<strong>${a.atividade}</strong> — prazo vencido`,meta:`Responsável: ${a.responsavel} · ${fmtData(a.prazo)} · ${critLabel[a.criticidade]}`}));
-  atividades.filter(a=>a.criticidade==='critico'&&a.status!=='concluido'&&!isVencido(a.prazo,a.status)).forEach(a=>alertas.push({cor:'var(--warn)',text:`<strong>${a.atividade}</strong> — crítica em aberto`,meta:`Responsável: ${a.responsavel} · Prazo: ${fmtData(a.prazo)}`}));
-  if(pct>0&&pct<60)alertas.push({cor:'var(--danger)',text:'<strong>Score 5S abaixo de 60%</strong> — situação crítica',meta:`Score atual: ${pct}%`});
-  else if(pct>=60&&pct<80)alertas.push({cor:'var(--warn)',text:'<strong>Score 5S abaixo de 80%</strong> — necessita atenção',meta:`Score atual: ${pct}%`});
-  al.innerHTML=alertas.length===0?'<div class="empty-dash">✅ Nenhum alerta. Tudo em ordem!</div>':alertas.map(a=>`<div class="alert-item"><div class="alert-dot" style="background:${a.cor};box-shadow:0 0 6px ${a.cor};"></div><div><div class="alert-text">${a.text}</div><div class="alert-meta">${a.meta}</div></div></div>`).join('');
-}
-
 
 // ══════════════════════════════════════════════
 // GESTÃO DE PROBLEMAS
@@ -2802,7 +2243,7 @@ async function _gerarDocxComDados(d){
   }
 }
 
-build();
+// app iniciado via onAuthStateChange
 </script>
 
 <!-- LIGHTBOX -->
