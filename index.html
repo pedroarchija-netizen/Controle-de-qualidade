@@ -1235,6 +1235,7 @@ function iniciarApp(user,profile){
   // Preencher campo "Aberto por" com o usuário logado
   const tfAbertor = document.getElementById('tf-abertor');
   if(tfAbertor) tfAbertor.value = profile?.nome||user.email;
+  document.getElementById('footer-year').textContent=new Date().getFullYear();
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('app-shell').style.display='block';
   carregarDados();
@@ -1465,13 +1466,6 @@ async function salvarHistorico(ticketId,entry,novasImagens){
   return imgsSalvas;
 }
 
-async function excluirTicketDB(id){
-  const {error}=await _supa.from('tickets').delete().eq('id',id);
-  if(error){toast('Erro ao excluir: '+error.message,'error');return false;}
-  return true;
-}
-
-
 // Upload imagens Storage
 async function uploadImagens(imgs,pasta){
   const salvas=[];
@@ -1534,9 +1528,11 @@ function closeSidebar(){
 // GESTÃO DE PROBLEMAS
 // ══════════════════════════════════════════════
 let tickets = [];
-let tkCounter = 0; // usado apenas para referência local temporária
 let tkFiltroAtual = 'todos';
 let tkModalId = null;
+let rncs = [];
+let ncFiltroAtual = 'todos';
+let _ncSearchTimer = null;
 
 const prioLabel = {critico:'🔴 Crítica', alto:'🟠 Alta', medio:'🟡 Média', baixo:'🟢 Baixa'};
 const statusLabel = {aberto:'Aberto', analise:'Em Análise', execucao:'Em Execução', resolvido:'Resolvido', fechado:'Fechado'};
@@ -1549,6 +1545,9 @@ function esc(str){
   if(str==null) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+
+function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function tkIsVencido(t){if(['resolvido','fechado'].includes(t.status)||!t.prazo)return false;return t.prazo<todayStr();}
 
 function nowStr(){
   const d = new Date();
@@ -1867,9 +1866,6 @@ function renderGPDashboard(){
 // ══════════════════════════════════════════════
 // NÃO CONFORMIDADE (RNC)
 // ══════════════════════════════════════════════
-let rncs = [];
-let ncFiltroAtual = 'todos';
-let _ncSearchTimer = null;
 
 const ncStatusClass = {'Em Aberto':'st-nc-aberto','Em Análise':'st-nc-analise','Em Execução':'st-nc-execucao','Encerrada':'st-nc-encerrada'};
 const ncStatusEmoji = {'Em Aberto':'🔵','Em Análise':'🟣','Em Execução':'🟡','Encerrada':'✅'};
